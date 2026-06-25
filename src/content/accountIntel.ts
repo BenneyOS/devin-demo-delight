@@ -1,0 +1,88 @@
+import type { ContentItem } from './schema';
+
+export const accountIntelContent: ContentItem[] = [
+  {
+    id: "cba-restructure-timing",
+    module: "account-intel",
+    type: "fact",
+    title: "CBA Leadership Restructure — The Timing Gift",
+    body: "On 19 June 2026, CBA restructured its technology leadership, effective 1 July 2026. This is current, real, and on-the-nose for the scenario. It signals you do live account intelligence, a core AD behavior.",
+    persona: ["CTO", "CIO", "Security"],
+    tags: ["account-intel", "timing", "restructure"],
+    confidence: "verified",
+    source: { label: "CBA / Mirage / Reuters via TradingView", url: "https://www.commbank.com.au" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "rodrigo-castillo-cto",
+    module: "account-intel",
+    type: "card",
+    title: "CTO — Rodrigo Castillo (Group CTO, eff. 1 Jul 2026)",
+    body: "**Mandate:** Enterprise technology foundations, engineering, security and AI capabilities — exactly Devin's territory.\n\n**Background:** Ex-HSBC senior CIO/MD; led modernisation programs; implemented DevSecOps and agile; deployed generative and agentic AI at scale across engineering. MIT Sloan exec cert; systems-engineering degree.\n\n**What this means:** Castillo is not a skeptic you must convert to AI — he has already deployed agentic AI at scale at HSBC. Your job is not 'why AI' but 'why Devin, why outcome-priced, why now at CBA.' Pitch up a level. He'll respect calibrated limitations and a modernisation-at-scale story.",
+    persona: ["CTO"],
+    tags: ["account-intel", "exec", "castillo", "cto"],
+    confidence: "verified",
+    source: { label: "Mirage / SMBtech, Jun 2026", url: "https://www.commbank.com.au" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "victoria-ledda-cio",
+    module: "account-intel",
+    type: "card",
+    title: "CIO — Victoria Ledda (Group CIO, eff. 1 Jul 2026)",
+    body: "**Mandate:** Business-aligned technology strategy and delivery across the Group. She owns the business→technology translation — the outcome conversation is her native language.\n\n**Background:** 15 years at Goldman Sachs (London/NY/Sydney) as MD; led global digital platform transformation, public cloud adoption, operational improvement. First-class CompSci, Kent. CommSec board; Mastercard advisory.\n\n**What this means:** Ledda has watched Goldman deploy Devin into its 'hybrid workforce' (Goldman is a public Devin reference). She thinks in delivery, portfolio, and business alignment. The opportunity-cost / capacity-reallocation framing is built for her.",
+    persona: ["CIO"],
+    tags: ["account-intel", "exec", "ledda", "cio", "goldman"],
+    confidence: "verified",
+    source: { label: "SMBtech / PeopleMatters, Jun 2026", url: "https://www.commbank.com.au" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "security-archetype",
+    module: "account-intel",
+    type: "card",
+    title: "Head of Compliance & Security — Archetype",
+    body: "**Why archetype:** CBA's CISO seat has had recent movement and public sources conflict; naming the wrong person is a credibility own-goal. An archetype is more robust for role-play.\n\n**Context:** CBA operates under APRA CPS 234 (Information Security) and CPS 230 (Operational Risk Management). CBA has a large, mature Cyber Security & Risk function and has historically run a major SAP estate and post-APRA-inquiry Remedial Action Plan discipline — 'demonstrable action and auditability beat policy intent.'\n\n**Mandate:** Where does our code go, who sees it, is every change attributable/reviewable/reversible, does it satisfy APRA and internal audit.",
+    persona: ["Security"],
+    tags: ["account-intel", "exec", "security", "apra", "compliance"],
+    confidence: "verified",
+    source: { label: "APRA CPS 234/230", url: "https://www.apra.gov.au" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "apra-cps-234",
+    module: "account-intel",
+    type: "fact",
+    title: "APRA CPS 234 — Information Security",
+    body: "APRA Prudential Standard CPS 234 requires APRA-regulated entities to maintain information security capabilities commensurate with the size and extent of threats. It mandates: clearly defined roles/responsibilities, maintaining information security capability, implementing controls to protect information assets, and notifying APRA of material incidents.",
+    persona: ["Security"],
+    tags: ["account-intel", "apra", "cps-234", "regulation"],
+    confidence: "verified",
+    source: { label: "APRA", url: "https://www.apra.gov.au" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "apra-cps-230",
+    module: "account-intel",
+    type: "fact",
+    title: "APRA CPS 230 — Operational Risk Management",
+    body: "APRA Prudential Standard CPS 230 (Operational Risk Management) sets requirements for operational resilience, including business continuity, third-party risk management, and tolerance for disruptions. Effective July 2025, requiring material service provider controls.",
+    persona: ["Security"],
+    tags: ["account-intel", "apra", "cps-230", "regulation"],
+    confidence: "verified",
+    source: { label: "APRA", url: "https://www.apra.gov.au" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "honesty-discipline-cba",
+    module: "account-intel",
+    type: "fact",
+    title: "Honesty Discipline",
+    body: "Never imply CBA is already a Cognition customer. Never claim insider knowledge from prior CBA test-customer work — use it only as warm context and credibility. Use the Goldman/Ledda link as industry proof, not personal leverage.",
+    persona: [],
+    tags: ["account-intel", "honesty", "discipline"],
+    confidence: "verified",
+    source: null,
+    dateAdded: "2026-06-25"
+  }
+];
