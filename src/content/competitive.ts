@@ -1,0 +1,112 @@
+import type { ContentItem } from './schema';
+
+export const competitiveContent: ContentItem[] = [
+  {
+    id: "core-differentiator",
+    module: "competitive",
+    type: "fact",
+    title: "Core Differentiator: Assistive vs. Autonomous",
+    body: "Assistive autocomplete vs. autonomous task execution. Copilot ~5-15% productivity assist; agentic Devin '2x-20x' on suitable tasks (Citi's own public framing). The fundamental split: IDE tools make a human faster; Devin completes work independently.",
+    persona: ["CTO", "CIO"],
+    tags: ["competitive", "differentiator", "core"],
+    confidence: "verified",
+    source: { label: "American Banker, Jul 2025", url: "https://www.americanbanker.com" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "copilot-objection",
+    module: "competitive",
+    type: "objection",
+    title: "\"We have Copilot.\"",
+    body: "**One-line:** Autocomplete assists a human keystroke-by-keystroke; Devin owns a scoped task to a reviewable PR, in parallel, across repos.\n\n**Persona:** CIO / CTO\n\n**Response:** Different layer — Cognition + MSFT position them as complementary. Copilot makes your developers faster at the work they're doing; Devin takes the work they shouldn't be doing off their plate entirely. You can have both. The question is: for the repeatable, parallelizable modernisation backlog, do you want to make humans faster, or do you want to stop needing humans for it at all?",
+    persona: ["CIO", "CTO"],
+    tags: ["competitive", "copilot", "objection", "microsoft"],
+    confidence: "verified",
+    source: null,
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "cursor-objection",
+    module: "competitive",
+    type: "objection",
+    title: "\"Our devs love Cursor.\"",
+    body: "**One-line:** Cursor = AI-native IDE, human in the driver's seat; Devin = delegate-to teammate. Windsurf gives Cognition the IDE surface too.\n\n**Persona:** CTO\n\n**Response:** That's the human-in-loop surface — great for the work your devs want to hand-fly. Devin is for the parallelizable backlog they don't want to hand-fly. Your best engineers shouldn't be doing Angular 18→19 upgrades across 50 repos keystroke-by-keystroke even with Cursor's help. They should be delegating that to an agent and reviewing the PR.",
+    persona: ["CTO"],
+    tags: ["competitive", "cursor", "objection"],
+    confidence: "verified",
+    source: null,
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "claude-code-objection",
+    module: "competitive",
+    type: "objection",
+    title: "\"Why not Claude Code?\"",
+    body: "**One-line:** Terminal agent driven turn-by-turn; Devin adds managed planning, VPC controls, MultiDevin orchestration, Devin Review governance.\n\n**Persona:** CTO / Security\n\n**Response:** For a regulated bank? Three things Claude Code can't give you: (1) Enterprise control plane — VPC deployment, RAG restricted to internal repos, audit trail. (2) Parallel orchestration — MultiDevin runs 10 migrations simultaneously. (3) The governance posture your CISO needs — Devin Review, immutable productivity dashboard, human approval gates. Claude Code is a powerful terminal agent; Devin is an enterprise platform.",
+    persona: ["CTO", "Security"],
+    tags: ["competitive", "claude-code", "objection", "anthropic"],
+    confidence: "verified",
+    source: null,
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "guarantee-closer",
+    module: "competitive",
+    type: "objection",
+    title: "The Guarantee Closer (When Stuck on Feature Parity)",
+    body: "\"Set the feature debate aside for a second. Copilot, Cursor, and Claude Code all sell you a seat — a license for a human, billed whether or not anything ships, with the tool's contribution impossible to isolate from the developer's. Devin is the only one that does the work autonomously, which is the only reason its output can be measured in equivalent engineering-hours and dollarised. And Cognition is the only vendor that will then guarantee that value breaks even or credit you up to $10M. None of the others can offer that — not because they won't, but because you can't guarantee the value of an autocomplete. That's the difference between buying inputs and buying outcomes, written into the contract.\"",
+    persona: ["CIO", "CTO"],
+    tags: ["competitive", "guarantee", "closer", "differentiator"],
+    confidence: "verified",
+    source: { label: "devin.ai/guarantee", url: "https://devin.ai/guarantee/" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "copilot-neutraliser",
+    module: "competitive",
+    type: "fact",
+    title: "Neutralising 'We Already Pay for Copilot'",
+    body: "Copilot and Devin aren't the same purchase. One is an input license for your humans; the other is a guaranteed-value outcome engine for the work your humans shouldn't be doing. They're different layers of the stack, and most Devin enterprise customers run both.",
+    persona: ["CIO"],
+    tags: ["competitive", "copilot", "neutraliser", "positioning"],
+    confidence: "verified",
+    source: null,
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "never-trash-competitors",
+    module: "competitive",
+    type: "fact",
+    title: "Rule: Never Trash a Competitor",
+    body: "Frame as layers of a stack, not enemies. Tie every differentiator back to the outcome thesis: autocomplete sells inputs/keystrokes; Devin sells outcomes/PRs. Respectful positioning builds trust, especially with technical buyers who use these tools daily.",
+    persona: [],
+    tags: ["competitive", "rule", "positioning"],
+    confidence: "verified",
+    source: null,
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "sold-technical-software-objection",
+    module: "competitive",
+    type: "objection",
+    title: "\"Have you sold technical software before?\"",
+    body: "Outcome-selling thesis from Google (banks/fintech/neobanks in 40+ AUNZ accounts). BizFlash builder credibility (Jira board, CI/CD, unit-test frameworks — lived the SDLC). DeepMind hackathon finalist. Built Google's Gemini customer-engagement playbook.\n\nThe performance-marketing parallel IS the answer — it's a POV only someone with Benney's exact background could credibly hold.",
+    persona: [],
+    tags: ["competitive", "about-me", "objection", "credibility"],
+    confidence: "verified",
+    source: null,
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "not-an-engineer-objection",
+    module: "competitive",
+    type: "objection",
+    title: "\"You're not an engineer.\"",
+    body: "Correct — and that's the buyer for Devin: translate engineering value to business outcomes, navigate the C-suite. Builder-adjacent, not coder-cosplay. The AD role exists precisely because you need someone who can speak both languages: credible enough for the CTO to respect, business-fluent enough for the CIO to fund.",
+    persona: [],
+    tags: ["competitive", "about-me", "objection"],
+    confidence: "verified",
+    source: null,
+    dateAdded: "2026-06-25"
+  }
+];

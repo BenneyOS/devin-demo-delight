@@ -1,0 +1,172 @@
+import type { ContentItem } from './schema';
+
+export const devinNarrativeContent: ContentItem[] = [
+  {
+    id: "devin-conceptual-model",
+    module: "devin-narrative",
+    type: "fact",
+    title: "Devin Conceptual Model",
+    body: "Agent + Dev Box (shell, editor, browser, persistent workspace). Interactive planning: approvable plan before execution. Devin Search / AskDevin: codebase queries, answers cited to code. Verification loop: sets up env, reproduces, codes, tests, iterates.",
+    persona: ["CTO"],
+    tags: ["devin-narrative", "architecture", "conceptual-model"],
+    confidence: "verified",
+    source: null,
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "multidevin-capability",
+    module: "devin-narrative",
+    type: "fact",
+    title: "MultiDevin — Parallel Execution",
+    body: "1 manager + up to 10 workers, parallel, auto-merged. This is the non-linear scaling mechanism: throughput scales with agents spun up, not seats hired.",
+    persona: ["CTO", "CIO"],
+    tags: ["devin-narrative", "multidevin", "parallel", "scaling"],
+    confidence: "verified",
+    source: { label: "Contrary Research", url: "https://research.contrary.com" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "devin-review",
+    module: "devin-narrative",
+    type: "fact",
+    title: "Devin Review (Jan 2026)",
+    body: "Structured PR review across files/history. Provides governance layer — every change is reviewable, auditable. Part of the control story for Security persona.",
+    persona: ["CTO", "Security"],
+    tags: ["devin-narrative", "devin-review", "governance", "audit"],
+    confidence: "verified",
+    source: null,
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "deepwiki",
+    module: "devin-narrative",
+    type: "fact",
+    title: "DeepWiki — Living Documentation",
+    body: "Living docs, architecture diagrams, dependency maps. Automatically generated and maintained. Supports onboarding and audit trail requirements.",
+    persona: ["CTO", "Security"],
+    tags: ["devin-narrative", "deepwiki", "documentation"],
+    confidence: "verified",
+    source: null,
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "devin-honest-framing",
+    module: "devin-narrative",
+    type: "fact",
+    title: "Honest Framing (Cognition's Own 2025 Review)",
+    body: "Best at clear-requirement, verifiable, junior-grade tasks. 67% PR merge rate (up from 34%). 4x faster. Not a senior-architect replacement. This honesty builds credibility — the CTO will respect calibrated limitations.",
+    persona: ["CTO"],
+    tags: ["devin-narrative", "honest-framing", "limitations", "credibility"],
+    confidence: "verified",
+    source: { label: "Cognition 2025 review", url: "https://devin.ai" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "demo-run-of-show",
+    module: "devin-narrative",
+    type: "story-beat",
+    title: "Demo Run-of-Show: Angular Upgrade",
+    body: "1. **Set the scene:** Show the bitwarden/clients repo, the Renovate dashboard, the Angular 18→19 upgrade pressure.\n2. **Interactive planning:** Devin proposes an upgrade plan — show the approvable plan step.\n3. **Execution:** Devin executes the migration — updates dependencies, fixes breaking changes, runs tests.\n4. **Verification loop:** Devin iterates on test failures, self-corrects.\n5. **The PR:** A clean, reviewable, mergeable PR — the 'conversion event.'\n6. **Scale vision:** 'Now picture MultiDevin running this across 10 repos in parallel.'",
+    persona: ["CTO", "CIO"],
+    tags: ["devin-narrative", "demo", "run-of-show", "angular"],
+    confidence: "verified",
+    source: null,
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "control-verification-security",
+    module: "devin-narrative",
+    type: "fact",
+    title: "Control & Verification Story (Security Room)",
+    body: "**VPC deployment:** Dev box runs in customer VPC, encrypted in transit.\n**RAG restriction:** Codebase access restricted to internal repos only.\n**Human approval gate:** Every change requires human review before merge.\n**Reviewable PRs:** Full diff, full audit trail on every change.\n**Devin Review:** Structured code review layer.\n**DeepWiki audit trail:** Living documentation of what changed and why.\n**Immutable dashboard:** Historical productivity data cannot be retroactively changed.",
+    persona: ["Security"],
+    tags: ["devin-narrative", "controls", "security", "vpc", "audit"],
+    confidence: "verified",
+    source: { label: "Contrary Research", url: "https://research.contrary.com" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "live-failure-recovery",
+    module: "devin-narrative",
+    type: "story-beat",
+    title: "Live Failure Recovery Lines",
+    body: "When Devin does something unexpected live, use calm narration:\n\n- \"This is exactly the kind of moment where you'd have a human approve before merge.\"\n- \"Notice how Devin self-corrects — that verification loop is what makes it production-safe.\"\n- \"In a real deployment, this is where your senior engineer reviews and either approves or sends it back — total control.\"\n\nThe elite tell is calm narration that turns a stumble into a trust-builder.",
+    persona: ["CTO", "CIO", "Security"],
+    tags: ["devin-narrative", "demo", "recovery", "mastery"],
+    confidence: "verified",
+    source: null,
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "citi-proof-point",
+    module: "devin-narrative",
+    type: "fact",
+    title: "Citi: 40,000 Developers",
+    body: "Devin deployed to ~40,000 devs at Citi. RAG restricted to internal repos. '2x-20x' vs Copilot's 5-15% on suitable tasks.",
+    persona: ["CIO", "CTO"],
+    tags: ["devin-narrative", "proof-point", "citi", "scale"],
+    confidence: "verified",
+    source: { label: "American Banker, Jul 2025", url: "https://www.americanbanker.com" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "goldman-proof-point",
+    module: "devin-narrative",
+    type: "fact",
+    title: "Goldman Sachs: Hybrid Workforce",
+    body: "Devin deployed in Goldman's 'hybrid workforce.' CIO Marco Argenti. Relevant because Ledda is ex-Goldman — use as industry proof, not personal leverage.",
+    persona: ["CIO"],
+    tags: ["devin-narrative", "proof-point", "goldman", "ledda-hook"],
+    confidence: "verified",
+    source: { label: "IBM Think, 2025", url: "https://www.ibm.com/think" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "nubank-proof-point",
+    module: "devin-narrative",
+    type: "fact",
+    title: "Nubank: 100k Data-Class Migrations",
+    body: "~100k data-class migrations, 1,000+ engineers, 18-month manual scope. Demonstrates Devin at massive scale on exactly the kind of repeatable migration work this pitch is about.",
+    persona: ["CTO", "CIO"],
+    tags: ["devin-narrative", "proof-point", "nubank", "migration"],
+    confidence: "verified",
+    source: { label: "devin.ai/customers", url: "https://devin.ai/customers" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "bank-etl-proof-point",
+    module: "devin-narrative",
+    type: "fact",
+    title: "Large Bank: ETL Migration 10x Speed",
+    body: "3-4 hrs/file vs 30-40 human (~10x faster). Oracle Java sunset: 14x/repo. Directly comparable to the Angular upgrade use case.",
+    persona: ["CTO", "CIO"],
+    tags: ["devin-narrative", "proof-point", "bank", "etl", "speed"],
+    confidence: "verified",
+    source: { label: "Cognition 2025 review", url: "https://devin.ai" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "litera-proof-point",
+    module: "devin-narrative",
+    type: "fact",
+    title: "Litera: 93% Faster Regression, +40% Coverage",
+    body: "Regression cycles 93% faster, +40% test coverage increase. Shows Devin's impact on testing — relevant to the 'verified outcomes' story.",
+    persona: ["CTO"],
+    tags: ["devin-narrative", "proof-point", "litera", "testing"],
+    confidence: "verified",
+    source: { label: "Cognition 2025 review", url: "https://devin.ai" },
+    dateAdded: "2026-06-25"
+  },
+  {
+    id: "itau-proof-point",
+    module: "devin-narrative",
+    type: "fact",
+    title: "Itau: AI Across the SDLC",
+    body: "AI across the SDLC at global-finance scale. Another bank proof point demonstrating financial-sector adoption.",
+    persona: ["CIO"],
+    tags: ["devin-narrative", "proof-point", "itau", "bank"],
+    confidence: "verified",
+    source: { label: "devin.ai/customers", url: "https://devin.ai/customers" },
+    dateAdded: "2026-06-25"
+  }
+];
