@@ -1,4 +1,4 @@
-import { useState, useMemo, useContext } from 'react';
+import { useState, useMemo } from 'react';
 import type { ContentItem } from '../content/schema';
 import { ModuleHeader } from '../components/ModuleHeader';
 import { ConfidenceBadge } from '../components/ConfidenceBadge';
@@ -8,7 +8,7 @@ import { EditableItem } from '../components/EditableItem';
 import type { Rating } from '../engine/sm2';
 import { calculateNextReview, getReviewState, saveReviewState, getDueItems } from '../engine/sm2';
 import { useNotes } from '../hooks/useNotes';
-import { AuthoringContext } from '../hooks/useAuthoring';
+import { useSupabaseContent } from '../hooks/useSupabaseContent';
 
 interface Props {
   module: string;
@@ -29,15 +29,15 @@ export function ModuleView({ module, title, subtitle, items }: Props) {
   const [addingItem, setAddingItem] = useState(false);
   const [newItemTitle, setNewItemTitle] = useState('');
 
-  const authoring = useContext(AuthoringContext);
-  const isAuthoring = authoring?.isAuthoring ?? false;
+  const ctx = useSupabaseContent();
+  const isAuthoring = ctx.isAuthoring;
 
   const authoredItems = useMemo(() => {
-    if (isAuthoring && authoring) {
-      return authoring.getModuleItems(module);
+    if (isAuthoring) {
+      return ctx.getModuleItems(module);
     }
     return items;
-  }, [isAuthoring, authoring, module, items]);
+  }, [isAuthoring, ctx, module, items]);
 
   const displayItems = isAuthoring ? authoredItems : items;
 
@@ -85,21 +85,20 @@ export function ModuleView({ module, title, subtitle, items }: Props) {
   };
 
   const handleAddItem = () => {
-    if (newItemTitle.trim() && authoring) {
-      authoring.addNewItem(module, newItemTitle.trim());
+    if (newItemTitle.trim()) {
+      ctx.addNewItem(module, newItemTitle.trim());
       setNewItemTitle('');
       setAddingItem(false);
     }
   };
 
   const handleMoveItem = (currentIndex: number, direction: 'up' | 'down') => {
-    if (!authoring) return;
     const ids = authoredItems.map(i => i.id);
     const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
     if (targetIndex < 0 || targetIndex >= ids.length) return;
     const newIds = [...ids];
     [newIds[currentIndex], newIds[targetIndex]] = [newIds[targetIndex], newIds[currentIndex]];
-    authoring.reorderItems(module, newIds);
+    ctx.reorderItems(module, newIds);
   };
 
   const activeDrillItems = dueItems.length > 0 ? dueItems : drillableItems;

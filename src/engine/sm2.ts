@@ -1,19 +1,22 @@
 /**
  * SM-2 Spaced Repetition Scheduler
- * 
- * Lightweight implementation of the SuperMemo SM-2 algorithm.
- * Stores review state in localStorage.
+ *
+ * Stores review state in Supabase study_state table.
+ * Uses an in-memory cache for synchronous access;
+ * writes propagate to Supabase asynchronously.
  */
+
+import { supabase } from '../lib/supabase';
 
 export type Rating = 'again' | 'hard' | 'good' | 'easy';
 
 export interface ReviewState {
   itemId: string;
-  easeFactor: number;     // starts at 2.5
-  interval: number;       // days until next review
-  repetitions: number;    // consecutive correct reviews
-  nextReview: string;     // ISO date string
-  lastReview: string;     // ISO date string
+  easeFactor: number;
+  interval: number;
+  repetitions: number;
+  nextReview: string;
+  lastReview: string;
   history: ReviewEntry[];
 }
 
@@ -23,7 +26,9 @@ export interface ReviewEntry {
   interval: number;
 }
 
-const STORAGE_KEY = 'trusted-advisor-os-sm2';
+// In-memory cache — populated from Supabase on init
+let stateCache: Record<string, ReviewState> = {};
+let initialized = false;
 
 function ratingToQuality(rating: Rating): number {
   switch (rating) {
@@ -37,15 +42,13 @@ function ratingToQuality(rating: Rating): number {
 export function calculateNextReview(state: ReviewState, rating: Rating): ReviewState {
   const quality = ratingToQuality(rating);
   const now = new Date().toISOString().split('T')[0];
-  
+
   let { easeFactor, interval, repetitions } = state;
 
   if (quality < 3) {
-    // Failed — reset
     repetitions = 0;
     interval = 1;
   } else {
-    // Passed
     if (repetitions === 0) {
       interval = 1;
     } else if (repetitions === 1) {
@@ -56,7 +59,6 @@ export function calculateNextReview(state: ReviewState, rating: Rating): ReviewS
     repetitions += 1;
   }
 
-  // Update ease factor (never below 1.3)
   easeFactor = easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
   if (easeFactor < 1.3) easeFactor = 1.3;
 
@@ -88,44 +90,97 @@ export function createInitialState(itemId: string): ReviewState {
   };
 }
 
-export function getAllReviewStates(): Record<string, ReviewState> {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : {};
-  } catch {
-    return {};
+interface DbStudyState {
+  content_item_id: string;
+  ease_factor: number;
+  interval: number;
+  reps: number;
+  next_review_at: string | null;
+  last_reviewed_at: string | null;
+  history: ReviewEntry[] | null;
+}
+
+function dbRowToReviewState(row: DbStudyState): ReviewState {
+  return {
+    itemId: row.content_item_id,
+    easeFactor: row.ease_factor,
+    interval: row.interval,
+    repetitions: row.reps,
+    nextReview: row.next_review_at?.split('T')[0] || new Date().toISOString().split('T')[0],
+    lastReview: row.last_reviewed_at?.split('T')[0] || '',
+    history: (row.history as ReviewEntry[]) || [],
+  };
+}
+
+export async function initStudyState(): Promise<void> {
+  const { data, error } = await supabase
+    .from('study_state')
+    .select('*');
+
+  if (error) {
+    console.error('Failed to load study state from Supabase:', error);
+    return;
   }
+
+  const cache: Record<string, ReviewState> = {};
+  for (const row of (data || []) as DbStudyState[]) {
+    cache[row.content_item_id] = dbRowToReviewState(row);
+  }
+  stateCache = cache;
+  initialized = true;
+}
+
+export function isStudyStateInitialized(): boolean {
+  return initialized;
+}
+
+export function getAllReviewStates(): Record<string, ReviewState> {
+  return stateCache;
 }
 
 export function getReviewState(itemId: string): ReviewState {
-  const states = getAllReviewStates();
-  return states[itemId] || createInitialState(itemId);
+  return stateCache[itemId] || createInitialState(itemId);
 }
 
 export function saveReviewState(state: ReviewState): void {
-  const states = getAllReviewStates();
-  states[state.itemId] = state;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(states));
+  // Update cache synchronously
+  stateCache[state.itemId] = state;
+
+  // Write to Supabase asynchronously
+  const row = {
+    content_item_id: state.itemId,
+    ease_factor: state.easeFactor,
+    interval: state.interval,
+    reps: state.repetitions,
+    next_review_at: state.nextReview,
+    last_reviewed_at: state.lastReview || null,
+    history: state.history,
+  };
+
+  supabase
+    .from('study_state')
+    .upsert(row, { onConflict: 'content_item_id' })
+    .then(({ error }) => {
+      if (error) {
+        console.error('Failed to save study state:', error);
+      }
+    });
 }
 
 export function getDueItems(itemIds: string[]): string[] {
   const today = new Date().toISOString().split('T')[0];
-  const states = getAllReviewStates();
-  
+
   return itemIds.filter(id => {
-    const state = states[id];
-    if (!state) return true; // Never reviewed = due
+    const state = stateCache[id];
+    if (!state) return true;
     return state.nextReview <= today;
   });
 }
 
 export function getWeakestItems(itemIds: string[], count: number = 5): string[] {
-  const states = getAllReviewStates();
-  
   return [...itemIds]
-    .map(id => ({ id, state: states[id] || createInitialState(id) }))
+    .map(id => ({ id, state: stateCache[id] || createInitialState(id) }))
     .sort((a, b) => {
-      // Sort by ease factor (lowest = weakest), then by interval (shortest = weakest)
       if (a.state.easeFactor !== b.state.easeFactor) {
         return a.state.easeFactor - b.state.easeFactor;
       }

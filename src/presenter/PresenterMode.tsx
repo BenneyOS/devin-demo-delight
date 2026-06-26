@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
-import { allContent } from '../content';
 import type { ContentItem, Persona } from '../content';
 import { useNotes } from '../hooks/useNotes';
+import { useSupabaseContent } from '../hooks/useSupabaseContent';
 
 interface Props {
   onExit: () => void;
@@ -11,11 +11,12 @@ export function PresenterMode({ onExit }: Props) {
   const [personaFilter, setPersonaFilter] = useState<Persona | 'all'>('all');
   const [activeSection, setActiveSection] = useState<'discovery' | 'demo' | 'objections' | 'notes'>('discovery');
   const { getPinnedNotes } = useNotes();
+  const { activeContent } = useSupabaseContent();
 
   const filteredContent = useMemo(() => {
-    if (personaFilter === 'all') return allContent;
-    return allContent.filter(item => item.persona.includes(personaFilter));
-  }, [personaFilter]);
+    if (personaFilter === 'all') return activeContent;
+    return activeContent.filter(item => item.persona.includes(personaFilter));
+  }, [personaFilter, activeContent]);
 
   const discoveryQuestions = useMemo(() => 
     filteredContent.filter(i => i.module === 'discovery' && i.type === 'question'),
