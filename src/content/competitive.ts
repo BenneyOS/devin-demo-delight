@@ -11,7 +11,11 @@ export const competitiveContent: ContentItem[] = [
     tags: ["competitive", "differentiator", "core"],
     confidence: "verified",
     source: { label: "American Banker, Jul 2025", url: "https://www.americanbanker.com" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 0,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "copilot-objection",
@@ -23,7 +27,11 @@ export const competitiveContent: ContentItem[] = [
     tags: ["competitive", "copilot", "objection", "microsoft"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 1,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cursor-objection",
@@ -35,7 +43,11 @@ export const competitiveContent: ContentItem[] = [
     tags: ["competitive", "cursor", "objection"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 2,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "claude-code-objection",
@@ -47,7 +59,11 @@ export const competitiveContent: ContentItem[] = [
     tags: ["competitive", "claude-code", "objection", "anthropic"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 3,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "guarantee-closer",
@@ -59,7 +75,11 @@ export const competitiveContent: ContentItem[] = [
     tags: ["competitive", "guarantee", "closer", "differentiator"],
     confidence: "verified",
     source: { label: "devin.ai/guarantee", url: "https://devin.ai/guarantee/" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 4,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "copilot-neutraliser",
@@ -71,7 +91,11 @@ export const competitiveContent: ContentItem[] = [
     tags: ["competitive", "copilot", "neutraliser", "positioning"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 5,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "never-trash-competitors",
@@ -83,7 +107,11 @@ export const competitiveContent: ContentItem[] = [
     tags: ["competitive", "rule", "positioning"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 6,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "sold-technical-software-objection",
@@ -95,7 +123,11 @@ export const competitiveContent: ContentItem[] = [
     tags: ["competitive", "about-me", "objection", "credibility"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 7,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "not-an-engineer-objection",
@@ -107,6 +139,10 @@ export const competitiveContent: ContentItem[] = [
     tags: ["competitive", "about-me", "objection"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 8,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   }
 ];

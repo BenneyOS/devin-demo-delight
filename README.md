@@ -20,17 +20,51 @@ src/
 │   ├── competitive.ts
 │   ├── mastery.ts
 │   └── index.ts      # Aggregation + "HOW TO ADD A SOURCE" guide
-├── engine/           # SM-2 spaced repetition scheduler
+├── engine/
+│   ├── sm2.ts        # SM-2 spaced repetition scheduler
+│   ├── draft.ts      # Two-layer draft engine (published baseline + localStorage overrides)
+│   ├── annotations.ts # Private notes engine (localStorage, never exported)
+│   └── exportImport.ts # Export/import authored content (zero annotations)
 ├── components/       # Reusable primitives (Card, Badge, DrillCard, etc.)
-├── modules/          # Module views (Study + Drill, data-driven)
+│   ├── EditableItem.tsx   # Inline editing with reorder controls
+│   ├── PublishBanner.tsx  # Unpublished changes warning
+│   ├── ArchiveDrawer.tsx  # Archived items management
+│   └── ExportImportPanel.tsx # Export/import UI
+├── modules/          # Module views (Study + Drill + Authoring, data-driven)
 ├── presenter/        # Presenter Mode (stripped live-reference view)
-├── hooks/            # useTheme, useLocalStorage, useNotes
+├── hooks/
+│   ├── useTheme.ts
+│   ├── useNotes.ts
+│   └── useAuthoring.ts # Authoring mode context + state management
+├── scripts/
+│   ├── apply-content.mjs  # Build-time: reads export JSON → writes src/content/ files
+│   └── prove-gates.mjs    # Automated privacy boundary verification (13 gates)
 └── App.tsx           # Router, navigation, layout
 ```
+
+### Two-Layer Content Model
+
+The app uses a two-layer architecture for content authoring:
+
+1. **Published layer** (`src/content/` files): The committed baseline. Deployed via GitHub Pages. This is the source of truth.
+2. **Draft layer** (localStorage `trusted-advisor-os-draft-authored`): Local overrides — edits, new items, archives, reorders. Never touches the repo directly.
+
+A third, completely isolated layer stores **private annotations** (localStorage `trusted-advisor-os-private-annotations`). These are never exported, never mixed with authored content — guaranteed by automated gate tests.
+
+### Publish Workflow
+
+Edits live in localStorage until you explicitly publish:
+
+1. Toggle **Authoring Mode** in the sidebar
+2. Edit, reorder, add, or archive items
+3. Go to **Export / Import** → click **Export content.json**
+4. Run `node scripts/apply-content.mjs content.export.json` to write `src/content/` files
+5. Commit and push — the site redeploys automatically
 
 ### Key Design Principles
 
 - **Content/structure separation**: All content lives in `src/content/`. The UI renders whatever is in those files. Adding a fact = adding an object to an array.
+- **Privacy boundary**: Private annotations never leave localStorage. Export produces only authored content. Verified by 13 automated gate tests (`node scripts/prove-gates.mjs`).
 - **EdTech mechanics**: Active recall (hide/reveal drills), SM-2 spaced repetition, confidence tracking, reflection notes.
 - **Data-driven**: Every module view is the same component rendering different content. Zero layout code changes needed to add content.
 - **Offline-first**: All state in localStorage. No external dependencies at runtime.
@@ -87,6 +121,8 @@ npm run preview   # Preview production build
 - **Drill View**: Active recall with SM-2 scheduling (Again/Hard/Good/Easy)
 - **Presenter Mode**: Stripped live-reference view with persona filtering
 - **Source Library**: Auto-aggregated, filterable, sortable
+- **Authoring Mode**: In-app editing, reordering, add/archive items, export/import workflow
+- **Privacy Boundary**: Private annotations isolated from authored content (13 automated gate tests)
 - **Dark/Light Mode**: System preference + manual toggle
 - **Responsive**: Desktop-first, fully usable on mobile
 - **Accessible**: Semantic HTML, keyboard navigable, WCAG AA contrast

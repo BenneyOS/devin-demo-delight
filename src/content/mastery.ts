@@ -11,7 +11,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "craft", "discovery", "methodology"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 0,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "teach-tailor-take-control",
@@ -23,7 +27,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "craft", "challenger", "reframe"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 1,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "earn-trust-before-pain",
@@ -35,7 +43,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "craft", "trust", "sequence"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 2,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "multi-thread-never-single",
@@ -47,7 +59,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "craft", "multi-thread", "stakeholders"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 3,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "storytelling-delivery-vehicle",
@@ -59,7 +75,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "craft", "storytelling"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 4,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "competency-executive-presence",
@@ -71,7 +91,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "competency", "executive-presence"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 5,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "competency-diagnostic-discovery",
@@ -83,7 +107,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "competency", "discovery"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 6,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "competency-reframe",
@@ -95,7 +123,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "competency", "reframe", "teach"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 7,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "competency-tailored-framing",
@@ -107,7 +139,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "competency", "tailoring", "framing"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 8,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "competency-narrative-demo",
@@ -119,7 +155,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "competency", "demo", "narrative"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 9,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "competency-objection-aikido",
@@ -131,7 +171,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "competency", "objections", "aikido"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 10,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "competency-command-next-step",
@@ -143,7 +187,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "competency", "closing", "next-step"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 11,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "practice-70-30-drill",
@@ -155,7 +203,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "practice", "70-30", "drill"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 12,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "practice-reframe-timer",
@@ -167,7 +219,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "practice", "reframe", "timer"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 13,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "practice-objection-cold-drill",
@@ -179,7 +235,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "practice", "objection", "cold-drill"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 14,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "practice-live-failure",
@@ -191,7 +251,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "practice", "failure", "recovery"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 15,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "practice-so-what-pass",
@@ -203,7 +267,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "practice", "so-what", "editing"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 16,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "narrative-arc-structure",
@@ -215,7 +283,11 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "narrative-arc", "structure", "40-minutes"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 17,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "benneys-background-unlock",
@@ -227,6 +299,10 @@ export const masteryContent: ContentItem[] = [
     tags: ["mastery", "background", "strengths", "gap"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 18,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   }
 ];
