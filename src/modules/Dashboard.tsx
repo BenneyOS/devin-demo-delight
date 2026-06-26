@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { allContent, getDrillableItems } from '../content';
+import { useSupabaseContent } from '../hooks/useSupabaseContent';
 import { getDueItems, getWeakestItems, getConfidenceLevel } from '../engine/sm2';
 import { Card } from '../components/Card';
 import { ConfidenceBadge } from '../components/ConfidenceBadge';
@@ -9,24 +9,16 @@ interface Props {
   interviewDate?: string;
 }
 
-const MODULE_ORDER = [
-  { key: 'thesis', label: 'The Thesis' },
-  { key: 'account-intel', label: 'Account Intelligence' },
-  { key: 'repo-rationale', label: 'Repo Rationale' },
-  { key: 'discovery', label: 'Discovery Engine' },
-  { key: 'devin-narrative', label: 'Devin Narrative' },
-  { key: 'competitive', label: 'Competitive Layer' },
-  { key: 'mastery', label: 'Mastery Module' },
-];
-
 export function Dashboard({ onNavigate, interviewDate }: Props) {
-  const drillableItems = useMemo(() => getDrillableItems(), []);
+  const { activeContent, modules, getDrillableItems } = useSupabaseContent();
+
+  const drillableItems = useMemo(() => getDrillableItems(), [getDrillableItems]);
   const dueItemIds = useMemo(() => getDueItems(drillableItems.map(i => i.id)), [drillableItems]);
   const weakestIds = useMemo(() => getWeakestItems(drillableItems.map(i => i.id), 5), [drillableItems]);
   
   const weakestItems = useMemo(() => 
-    weakestIds.map(id => allContent.find(c => c.id === id)).filter(Boolean),
-    [weakestIds]
+    weakestIds.map(id => activeContent.find(c => c.id === id)).filter(Boolean),
+    [weakestIds, activeContent]
   );
 
   const daysUntilInterview = useMemo(() => {
@@ -35,18 +27,28 @@ export function Dashboard({ onNavigate, interviewDate }: Props) {
     return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
   }, [interviewDate]);
 
-  // Module progress (% of drillable items reviewed at least once)
+  const MODULE_TITLES: Record<string, string> = {
+    'thesis': 'The Thesis',
+    'account-intel': 'Account Intelligence',
+    'repo-rationale': 'Repo Rationale',
+    'discovery': 'Discovery Engine',
+    'devin-narrative': 'Devin Narrative',
+    'competitive': 'Competitive Layer',
+    'mastery': 'Mastery Module',
+  };
+
   const moduleProgress = useMemo(() => {
-    return MODULE_ORDER.map(mod => {
-      const moduleItems = drillableItems.filter(i => i.module === mod.key);
-      if (moduleItems.length === 0) return { ...mod, progress: 100, total: 0, reviewed: 0 };
+    return modules.map(slug => {
+      const moduleItems = drillableItems.filter(i => i.module === slug);
+      const label = MODULE_TITLES[slug] || slug;
+      if (moduleItems.length === 0) return { key: slug, label, progress: 100, total: 0, reviewed: 0 };
       const reviewed = moduleItems.filter(i => {
         const level = getConfidenceLevel(i.id);
         return level !== 'new';
       }).length;
-      return { ...mod, progress: Math.round((reviewed / moduleItems.length) * 100), total: moduleItems.length, reviewed };
+      return { key: slug, label, progress: Math.round((reviewed / moduleItems.length) * 100), total: moduleItems.length, reviewed };
     });
-  }, [drillableItems]);
+  }, [modules, drillableItems]);
 
   return (
     <div>
@@ -101,7 +103,7 @@ export function Dashboard({ onNavigate, interviewDate }: Props) {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
             {dueItemIds.slice(0, 5).map(id => {
-              const item = allContent.find(c => c.id === id);
+              const item = activeContent.find(c => c.id === id);
               if (!item) return null;
               return (
                 <Card key={id} variant="outlined" padding="sm" onClick={() => onNavigate(item.module)}>

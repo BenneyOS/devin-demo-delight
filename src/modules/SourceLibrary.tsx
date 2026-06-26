@@ -1,11 +1,12 @@
 import { useState, useMemo } from 'react';
-import { getSourceItems } from '../content';
+import { useSupabaseContent } from '../hooks/useSupabaseContent';
 import { ConfidenceBadge } from '../components/ConfidenceBadge';
 import { Badge } from '../components/Badge';
 import { ModuleHeader } from '../components/ModuleHeader';
 
 export function SourceLibrary() {
-  const sources = useMemo(() => getSourceItems(), []);
+  const { getSourceItems } = useSupabaseContent();
+  const sources = useMemo(() => getSourceItems(), [getSourceItems]);
   const [filterModule, setFilterModule] = useState<string>('all');
   const [filterConfidence, setFilterConfidence] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'date' | 'module'>('date');

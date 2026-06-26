@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import type { ContentItem, ContentType, Confidence, Persona } from '../content/schema';
-import { useAuthoring } from '../hooks/useAuthoring';
+import { useSupabaseContent } from '../hooks/useSupabaseContent';
 import { ConfidenceBadge } from './ConfidenceBadge';
 import { Badge } from './Badge';
 
@@ -15,9 +15,10 @@ interface Props {
 const CONTENT_TYPES: ContentType[] = ['fact', 'question', 'objection', 'card', 'source', 'story-beat'];
 const CONFIDENCE_LEVELS: Confidence[] = ['verified', 'inferred', 'claim'];
 const PERSONAS: Persona[] = ['CTO', 'CIO', 'Security'];
+const DEBOUNCE_MS = 300;
 
 export function EditableItem({ item, index, totalItems, onMoveUp, onMoveDown }: Props) {
-  const { saveItem, archive, revert, isEdited } = useAuthoring();
+  const { saveItem, archive, revert, isEdited } = useSupabaseContent();
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(item.title);
   const [body, setBody] = useState(item.body);
@@ -29,14 +30,29 @@ export function EditableItem({ item, index, totalItems, onMoveUp, onMoveDown }: 
   const [sourceUrl, setSourceUrl] = useState(item.source?.url || '');
 
   const edited = isEdited(item.id);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleSave = () => {
+  // Sync local state when item prop changes (e.g. from realtime)
+  useEffect(() => {
+    if (!editing) {
+      setTitle(item.title);
+      setBody(item.body);
+      setType(item.type);
+      setConfidence(item.confidence);
+      setPersona(item.persona);
+      setTags(item.tags.join(', '));
+      setSourceLabel(item.source?.label || '');
+      setSourceUrl(item.source?.url || '');
+    }
+  }, [item, editing]);
+
+  const buildUpdatedItem = useCallback((): ContentItem => {
     const parsedTags = tags.split(',').map(t => t.trim()).filter(Boolean);
     const source = sourceLabel && sourceUrl
       ? { label: sourceLabel, url: sourceUrl }
       : null;
 
-    saveItem({
+    return {
       ...item,
       title,
       body,
@@ -45,8 +61,50 @@ export function EditableItem({ item, index, totalItems, onMoveUp, onMoveDown }: 
       persona,
       tags: parsedTags,
       source,
-    });
-    setEditing(false);
+    };
+  }, [item, title, body, type, confidence, persona, tags, sourceLabel, sourceUrl]);
+
+  // Debounced save — fires on blur or 300ms after last change
+  const debounceSave = useCallback(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      saveItem(buildUpdatedItem());
+    }, DEBOUNCE_MS);
+  }, [saveItem, buildUpdatedItem]);
+
+  const handleBlurSave = useCallback(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    saveItem(buildUpdatedItem());
+  }, [saveItem, buildUpdatedItem]);
+
+  // Cleanup debounce on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
+
+  // Immediate save on select/toggle changes
+  const handleTypeChange = (newType: ContentType) => {
+    setType(newType);
+    const parsedTags = tags.split(',').map(t => t.trim()).filter(Boolean);
+    const source = sourceLabel && sourceUrl ? { label: sourceLabel, url: sourceUrl } : null;
+    saveItem({ ...item, title, body, type: newType, confidence, persona, tags: parsedTags, source });
+  };
+
+  const handleConfidenceChange = (newConfidence: Confidence) => {
+    setConfidence(newConfidence);
+    const parsedTags = tags.split(',').map(t => t.trim()).filter(Boolean);
+    const source = sourceLabel && sourceUrl ? { label: sourceLabel, url: sourceUrl } : null;
+    saveItem({ ...item, title, body, type, confidence: newConfidence, persona, tags: parsedTags, source });
+  };
+
+  const handlePersonaToggle = (p: Persona) => {
+    const newPersona = persona.includes(p) ? persona.filter(x => x !== p) : [...persona, p];
+    setPersona(newPersona);
+    const parsedTags = tags.split(',').map(t => t.trim()).filter(Boolean);
+    const source = sourceLabel && sourceUrl ? { label: sourceLabel, url: sourceUrl } : null;
+    saveItem({ ...item, title, body, type, confidence, persona: newPersona, tags: parsedTags, source });
   };
 
   const handleCancel = () => {
@@ -61,12 +119,6 @@ export function EditableItem({ item, index, totalItems, onMoveUp, onMoveDown }: 
     setEditing(false);
   };
 
-  const togglePersona = (p: Persona) => {
-    setPersona(prev =>
-      prev.includes(p) ? prev.filter(x => x !== p) : [...prev, p]
-    );
-  };
-
   const inputStyle = {
     width: '100%',
     padding: 'var(--space-2) var(--space-3)',
@@ -76,6 +128,7 @@ export function EditableItem({ item, index, totalItems, onMoveUp, onMoveDown }: 
     color: 'var(--text-primary)',
     fontSize: 'var(--text-sm)',
     fontFamily: 'inherit',
+    boxSizing: 'border-box' as const,
   };
 
   const smallBtnStyle = {
@@ -125,7 +178,7 @@ export function EditableItem({ item, index, totalItems, onMoveUp, onMoveDown }: 
           onClick={() => setEditing(!editing)}
           style={{ ...smallBtnStyle, color: 'var(--accent)' }}
         >
-          {editing ? 'Cancel edit' : 'Edit'}
+          {editing ? 'Close' : 'Edit'}
         </button>
         <button
           onClick={() => archive(item.id)}
@@ -151,14 +204,15 @@ export function EditableItem({ item, index, totalItems, onMoveUp, onMoveDown }: 
       </div>
 
       {editing ? (
-        /* Edit form */
+        /* Edit form — blur/debounce saves */
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
           <div>
             <label style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginBottom: '2px', display: 'block' }}>Title</label>
             <input
               type="text"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => { setTitle(e.target.value); debounceSave(); }}
+              onBlur={handleBlurSave}
               style={inputStyle}
             />
           </div>
@@ -166,7 +220,8 @@ export function EditableItem({ item, index, totalItems, onMoveUp, onMoveDown }: 
             <label style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginBottom: '2px', display: 'block' }}>Body</label>
             <textarea
               value={body}
-              onChange={(e) => setBody(e.target.value)}
+              onChange={(e) => { setBody(e.target.value); debounceSave(); }}
+              onBlur={handleBlurSave}
               rows={4}
               style={{ ...inputStyle, resize: 'vertical' }}
             />
@@ -174,13 +229,13 @@ export function EditableItem({ item, index, totalItems, onMoveUp, onMoveDown }: 
           <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
             <div>
               <label style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginBottom: '2px', display: 'block' }}>Type</label>
-              <select value={type} onChange={(e) => setType(e.target.value as ContentType)} style={inputStyle}>
+              <select value={type} onChange={(e) => handleTypeChange(e.target.value as ContentType)} style={inputStyle}>
                 {CONTENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
               </select>
             </div>
             <div>
               <label style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginBottom: '2px', display: 'block' }}>Confidence</label>
-              <select value={confidence} onChange={(e) => setConfidence(e.target.value as Confidence)} style={inputStyle}>
+              <select value={confidence} onChange={(e) => handleConfidenceChange(e.target.value as Confidence)} style={inputStyle}>
                 {CONFIDENCE_LEVELS.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
@@ -192,7 +247,7 @@ export function EditableItem({ item, index, totalItems, onMoveUp, onMoveDown }: 
                 <button
                   key={p}
                   type="button"
-                  onClick={() => togglePersona(p)}
+                  onClick={() => handlePersonaToggle(p)}
                   style={{
                     padding: '2px var(--space-3)',
                     fontSize: 'var(--text-xs)',
@@ -214,7 +269,8 @@ export function EditableItem({ item, index, totalItems, onMoveUp, onMoveDown }: 
             <input
               type="text"
               value={tags}
-              onChange={(e) => setTags(e.target.value)}
+              onChange={(e) => { setTags(e.target.value); debounceSave(); }}
+              onBlur={handleBlurSave}
               style={inputStyle}
             />
           </div>
@@ -224,7 +280,8 @@ export function EditableItem({ item, index, totalItems, onMoveUp, onMoveDown }: 
               <input
                 type="text"
                 value={sourceLabel}
-                onChange={(e) => setSourceLabel(e.target.value)}
+                onChange={(e) => { setSourceLabel(e.target.value); debounceSave(); }}
+                onBlur={handleBlurSave}
                 placeholder="e.g. Cognition Blog"
                 style={inputStyle}
               />
@@ -234,28 +291,14 @@ export function EditableItem({ item, index, totalItems, onMoveUp, onMoveDown }: 
               <input
                 type="text"
                 value={sourceUrl}
-                onChange={(e) => setSourceUrl(e.target.value)}
+                onChange={(e) => { setSourceUrl(e.target.value); debounceSave(); }}
+                onBlur={handleBlurSave}
                 placeholder="https://..."
                 style={inputStyle}
               />
             </div>
           </div>
-          <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
-            <button
-              onClick={handleSave}
-              style={{
-                padding: 'var(--space-2) var(--space-4)',
-                background: 'var(--accent)',
-                color: '#fff',
-                border: 'none',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: 'var(--text-sm)',
-                fontWeight: 500,
-                cursor: 'pointer',
-              }}
-            >
-              Save
-            </button>
+          <div>
             <button
               onClick={handleCancel}
               style={{
@@ -268,7 +311,7 @@ export function EditableItem({ item, index, totalItems, onMoveUp, onMoveDown }: 
                 cursor: 'pointer',
               }}
             >
-              Cancel
+              Close
             </button>
           </div>
         </div>

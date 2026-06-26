@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useAuthoring } from '../hooks/useAuthoring';
+import { useSupabaseContent } from '../hooks/useSupabaseContent';
 import { ConfidenceBadge } from './ConfidenceBadge';
 import { Badge } from './Badge';
 
 export function ArchiveDrawer() {
-  const { archivedContent, restore, purge } = useAuthoring();
+  const { archivedContent, restore, purge } = useSupabaseContent();
   const [confirmPurge, setConfirmPurge] = useState<string | null>(null);
   const [purgeText, setPurgeText] = useState('');
 
