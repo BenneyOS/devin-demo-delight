@@ -8,6 +8,7 @@ import { PresenterMode } from './presenter/PresenterMode';
 import { ArchiveDrawer } from './components/ArchiveDrawer';
 import { BackupExport } from './components/BackupExport';
 import { OwnerKeyPrompt } from './components/OwnerKeyPrompt';
+import { CategoryNav } from './components/CategoryNav';
 import './index.css';
 
 type Page = 'dashboard' | 'sources' | 'presenter' | 'archive' | 'backup' | string;
@@ -19,26 +20,12 @@ function AppContent() {
   const [presenterMode, setPresenterMode] = useState(false);
 
   const ctx = useSupabaseContent();
-  const { loading, error, modules, getModuleItems, isAuthoring, isOwner, logout } = ctx;
-
-  const MODULE_TITLES: Record<string, { title: string; subtitle: string }> = {
-    'thesis': { title: 'The Thesis', subtitle: 'From inputs to outcomes \u2014 the one idea this pitch hangs from' },
-    'account-intel': { title: 'Account Intelligence', subtitle: 'CBA leadership, timing, and regulatory context' },
-    'repo-rationale': { title: 'Repo Rationale', subtitle: 'Why bitwarden/clients is the defensible CBA proxy' },
-    'discovery': { title: 'Discovery Engine', subtitle: 'Per-persona question banks that surface their pain' },
-    'devin-narrative': { title: 'Devin Narrative', subtitle: 'How Devin works, the demo run-of-show, and proof points' },
-    'competitive': { title: 'Competitive Layer', subtitle: 'Objection cards and the guarantee closer' },
-    'mastery': { title: 'Mastery Module', subtitle: 'AE craft framework and deliberate practice' },
-  };
-
-  const NAV_ITEMS = [
-    { key: 'dashboard', label: 'Dashboard' },
-    ...modules.map(slug => ({
-      key: slug,
-      label: MODULE_TITLES[slug]?.title || slug,
-    })),
-    { key: 'sources', label: 'Source Library' },
-  ];
+  const {
+    loading, error, moduleObjects, getModuleItems,
+    isAuthoring, isOwner, logout,
+    renameModule, archiveModule, reorderModuleList, addNewModule,
+    getModuleItemCount,
+  } = ctx;
 
   const navigate = (page: string) => {
     setCurrentPage(page as Page);
@@ -141,32 +128,17 @@ function AppContent() {
           </div>
 
           {/* Nav items */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-            {NAV_ITEMS.map(item => (
-              <button
-                key={item.key}
-                onClick={() => navigate(item.key)}
-                style={{
-                  display: 'block',
-                  width: '100%',
-                  textAlign: 'left',
-                  padding: 'var(--space-2) var(--space-3)',
-                  border: 'none',
-                  borderRadius: 'var(--radius-sm)',
-                  background: currentPage === item.key ? 'var(--accent-subtle)' : 'transparent',
-                  color: currentPage === item.key ? 'var(--accent)' : 'var(--text-secondary)',
-                  fontSize: 'var(--text-sm)',
-                  fontWeight: currentPage === item.key ? 500 : 400,
-                  cursor: 'pointer',
-                  transition: 'var(--transition-fast)',
-                }}
-                onMouseEnter={(e) => { if (currentPage !== item.key) e.currentTarget.style.background = 'var(--bg-hover)'; }}
-                onMouseLeave={(e) => { if (currentPage !== item.key) e.currentTarget.style.background = 'transparent'; }}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
+          <CategoryNav
+            moduleObjects={moduleObjects}
+            currentPage={currentPage}
+            isAuthoring={isAuthoring}
+            onNavigate={navigate}
+            onRename={renameModule}
+            onArchive={archiveModule}
+            onAddCategory={() => { addNewModule('New Category'); }}
+            onReorder={reorderModuleList}
+            getModuleItemCount={getModuleItemCount}
+          />
 
           {/* Authoring Mode Section */}
           <div style={{ marginTop: 'var(--space-6)', paddingTop: 'var(--space-4)', borderTop: '1px solid var(--border-secondary)' }}>
@@ -327,8 +299,8 @@ function AppContent() {
           {isModule && (
             <ModuleView
               module={currentPage}
-              title={MODULE_TITLES[currentPage]?.title || currentPage}
-              subtitle={MODULE_TITLES[currentPage]?.subtitle}
+              title={moduleObjects.find(m => m.slug === currentPage)?.title || currentPage}
+              subtitle={undefined}
               items={getModuleItems(currentPage)}
             />
           )}
