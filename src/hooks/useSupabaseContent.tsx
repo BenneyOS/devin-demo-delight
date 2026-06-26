@@ -46,6 +46,15 @@ interface DbContentItem {
   date_added: string | null;
   last_edited_by: string;
   updated_at: string;
+  pre_archive_status: string | null;
+}
+
+export interface ModuleObject {
+  id: string;
+  slug: string;
+  title: string;
+  order: number;
+  status: string;
 }
 
 // ── Mappers ──
@@ -113,11 +122,15 @@ interface SupabaseContentState {
   activeContent: ContentItem[];
   archivedContent: ContentItem[];
   modules: string[];
+  moduleObjects: ModuleObject[];
+  allModuleObjects: ModuleObject[];
+  archivedModules: ModuleObject[];
   getModuleItems: (module: string) => ContentItem[];
   getContentByModule: (module: string) => ContentItem[];
   getDrillableItems: () => ContentItem[];
   getSourceItems: () => ContentItem[];
   getContentByPersona: (persona: string) => ContentItem[];
+  getModuleItemCount: (moduleId: string) => number;
 
   // Authoring
   isAuthoring: boolean;
@@ -142,6 +155,12 @@ interface SupabaseContentState {
   isEdited: (id: string) => boolean;
   reorderModuleList: (modules: string[]) => void;
   refresh: () => void;
+
+  // Module CRUD
+  renameModule: (moduleId: string, newTitle: string) => void;
+  archiveModule: (moduleId: string) => void;
+  restoreModule: (moduleId: string) => void;
+  purgeModule: (moduleId: string) => void;
 }
 
 const SupabaseContentContext = createContext<SupabaseContentState | null>(null);
@@ -256,6 +275,20 @@ export function SupabaseContentProvider({ children }: { children: ReactNode }) {
       .map(m => m.slug),
   [dbModules]);
 
+  const moduleObjects = useMemo<ModuleObject[]>(() =>
+    dbModules
+      .filter(m => m.status === 'active')
+      .sort((a, b) => a.order - b.order),
+  [dbModules]);
+
+  const allModuleObjects = useMemo<ModuleObject[]>(() =>
+    [...dbModules].sort((a, b) => a.order - b.order),
+  [dbModules]);
+
+  const archivedModules = useMemo<ModuleObject[]>(() =>
+    dbModules.filter(m => m.status === 'archived'),
+  [dbModules]);
+
   const getModuleItems = useCallback((module: string) =>
     activeContent
       .filter(item => item.module === module)
@@ -281,6 +314,10 @@ export function SupabaseContentProvider({ children }: { children: ReactNode }) {
   const getContentByPersona = useCallback((persona: string) =>
     activeContent.filter(item => item.persona.includes(persona as Persona)),
   [activeContent]);
+
+  const getModuleItemCount = useCallback((moduleId: string) => {
+    return dbItems.filter(r => r.module_id === moduleId && r.status === 'active').length;
+  }, [dbItems]);
 
   // ── Owner key flow ──
   const toggleAuthoring = useCallback(() => {
@@ -455,6 +492,7 @@ export function SupabaseContentProvider({ children }: { children: ReactNode }) {
       date_added: now.split('T')[0],
       last_edited_by: 'owner',
       updated_at: now,
+      pre_archive_status: null,
     };
 
     // Optimistic add
@@ -540,6 +578,7 @@ export function SupabaseContentProvider({ children }: { children: ReactNode }) {
       date_added: now.split('T')[0],
       last_edited_by: 'owner',
       updated_at: now,
+      pre_archive_status: null,
     };
 
     setDbItems(prev => [...prev, newRow]);
@@ -611,6 +650,157 @@ export function SupabaseContentProvider({ children }: { children: ReactNode }) {
     });
   }, [dbModules, fetchData]);
 
+  // ── Module CRUD ──
+
+  const renameModule = useCallback((moduleId: string, newTitle: string) => {
+    const prevModules = [...dbModules];
+    const mod = dbModules.find(m => m.id === moduleId);
+    if (!mod) return;
+
+    const newSlug = newTitle.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
+    // Optimistic update
+    setDbModules(prev => prev.map(m =>
+      m.id === moduleId ? { ...m, title: newTitle, slug: newSlug } : m
+    ));
+
+    writeToSupabase(
+      () => supabase.from('modules').update({ title: newTitle, slug: newSlug }).eq('id', moduleId),
+      () => setDbModules(prevModules),
+      'Rename module'
+    );
+  }, [dbModules, writeToSupabase]);
+
+  const archiveModule = useCallback((moduleId: string) => {
+    const prevModules = [...dbModules];
+    const prevItems = [...dbItems];
+
+    // Optimistic: archive module
+    setDbModules(prev => prev.map(m =>
+      m.id === moduleId ? { ...m, status: 'archived' } : m
+    ));
+
+    // Optimistic: cascade archive all module items, saving pre_archive_status
+    setDbItems(prev => prev.map(r =>
+      r.module_id === moduleId && r.status !== 'archived'
+        ? { ...r, pre_archive_status: r.status, status: 'archived' }
+        : r
+    ));
+
+    // DB: archive module
+    supabase.from('modules').update({ status: 'archived' }).eq('id', moduleId)
+      .then(({ error: modErr }) => {
+        if (modErr) {
+          setDbModules(prevModules);
+          setDbItems(prevItems);
+          showErrorToast('Archive module failed. Changes reverted.');
+          fetchData();
+          return;
+        }
+
+        // DB: cascade archive items — save pre_archive_status and set status='archived'
+        const itemsToArchive = prevItems.filter(r => r.module_id === moduleId && r.status !== 'archived');
+        if (itemsToArchive.length === 0) return;
+
+        const updates = itemsToArchive.map(r =>
+          supabase.from('content_items')
+            .update({ status: 'archived', pre_archive_status: r.status })
+            .eq('id', r.id)
+        );
+
+        Promise.all(updates).then(results => {
+          const failed = results.find(r => r.error);
+          if (failed) {
+            setDbModules(prevModules);
+            setDbItems(prevItems);
+            showErrorToast('Archive module items failed. Changes reverted.');
+            fetchData();
+          }
+        });
+      });
+  }, [dbModules, dbItems, fetchData]);
+
+  const restoreModule = useCallback((moduleId: string) => {
+    const prevModules = [...dbModules];
+    const prevItems = [...dbItems];
+
+    // Optimistic: restore module
+    setDbModules(prev => prev.map(m =>
+      m.id === moduleId ? { ...m, status: 'active' } : m
+    ));
+
+    // Optimistic: cascade restore items to their pre_archive_status
+    setDbItems(prev => prev.map(r => {
+      if (r.module_id !== moduleId || r.status !== 'archived') return r;
+      const restoredStatus = r.pre_archive_status || 'active';
+      return { ...r, status: restoredStatus, pre_archive_status: null };
+    }));
+
+    // DB: restore module
+    supabase.from('modules').update({ status: 'active' }).eq('id', moduleId)
+      .then(({ error: modErr }) => {
+        if (modErr) {
+          setDbModules(prevModules);
+          setDbItems(prevItems);
+          showErrorToast('Restore module failed. Changes reverted.');
+          fetchData();
+          return;
+        }
+
+        // DB: cascade restore items
+        const itemsToRestore = prevItems.filter(r => r.module_id === moduleId && r.status === 'archived');
+        if (itemsToRestore.length === 0) return;
+
+        const updates = itemsToRestore.map(r => {
+          const restoredStatus = r.pre_archive_status || 'active';
+          return supabase.from('content_items')
+            .update({ status: restoredStatus, pre_archive_status: null })
+            .eq('id', r.id);
+        });
+
+        Promise.all(updates).then(results => {
+          const failed = results.find(r => r.error);
+          if (failed) {
+            setDbModules(prevModules);
+            setDbItems(prevItems);
+            showErrorToast('Restore module items failed. Changes reverted.');
+            fetchData();
+          }
+        });
+      });
+  }, [dbModules, dbItems, fetchData]);
+
+  const purgeModule = useCallback((moduleId: string) => {
+    const prevModules = [...dbModules];
+    const prevItems = [...dbItems];
+
+    // Optimistic: remove module and all its items
+    setDbModules(prev => prev.filter(m => m.id !== moduleId));
+    setDbItems(prev => prev.filter(r => r.module_id !== moduleId));
+
+    // DB: delete items first (ON DELETE CASCADE should handle this, but be explicit)
+    supabase.from('content_items').delete().eq('module_id', moduleId)
+      .then(({ error: itemErr }) => {
+        if (itemErr) {
+          setDbModules(prevModules);
+          setDbItems(prevItems);
+          showErrorToast('Purge module items failed. Changes reverted.');
+          fetchData();
+          return;
+        }
+
+        supabase.from('modules').delete().eq('id', moduleId)
+          .then(({ error: modErr }) => {
+            if (modErr) {
+              setDbModules(prevModules);
+              setDbItems(prevItems);
+              showErrorToast('Purge module failed. Changes reverted.');
+              fetchData();
+            }
+          });
+      });
+  }, [dbModules, dbItems, fetchData]);
+
   const hasChanges = editedIds.size > 0;
   const changeCount = editedIds.size;
   const isEdited = useCallback((id: string) => editedIds.has(id), [editedIds]);
@@ -623,11 +813,15 @@ export function SupabaseContentProvider({ children }: { children: ReactNode }) {
     activeContent,
     archivedContent,
     modules,
+    moduleObjects,
+    allModuleObjects,
+    archivedModules,
     getModuleItems,
     getContentByModule,
     getDrillableItems,
     getSourceItems,
     getContentByPersona,
+    getModuleItemCount,
     isAuthoring,
     toggleAuthoring,
     isOwner,
@@ -648,13 +842,19 @@ export function SupabaseContentProvider({ children }: { children: ReactNode }) {
     isEdited,
     reorderModuleList,
     refresh,
+    renameModule,
+    archiveModule,
+    restoreModule,
+    purgeModule,
   }), [
     loading, error, allContent, activeContent, archivedContent, modules,
+    moduleObjects, allModuleObjects, archivedModules,
     getModuleItems, getContentByModule, getDrillableItems, getSourceItems,
-    getContentByPersona, isAuthoring, toggleAuthoring, isOwner,
+    getContentByPersona, getModuleItemCount, isAuthoring, toggleAuthoring, isOwner,
     ownerKeyPromptOpen, submitOwnerKey, logout, saveItem, reorderItems,
     archive, restore, purge, addNewItem, addNewModule, revert, discardAll,
     hasChanges, changeCount, isEdited, reorderModuleList, refresh,
+    renameModule, archiveModule, restoreModule, purgeModule,
   ]);
 
   return (

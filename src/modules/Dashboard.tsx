@@ -10,7 +10,7 @@ interface Props {
 }
 
 export function Dashboard({ onNavigate, interviewDate }: Props) {
-  const { activeContent, modules, getDrillableItems } = useSupabaseContent();
+  const { activeContent, modules, moduleObjects, getDrillableItems } = useSupabaseContent();
 
   const drillableItems = useMemo(() => getDrillableItems(), [getDrillableItems]);
   const dueItemIds = useMemo(() => getDueItems(drillableItems.map(i => i.id)), [drillableItems]);
@@ -27,20 +27,11 @@ export function Dashboard({ onNavigate, interviewDate }: Props) {
     return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
   }, [interviewDate]);
 
-  const MODULE_TITLES: Record<string, string> = {
-    'thesis': 'The Thesis',
-    'account-intel': 'Account Intelligence',
-    'repo-rationale': 'Repo Rationale',
-    'discovery': 'Discovery Engine',
-    'devin-narrative': 'Devin Narrative',
-    'competitive': 'Competitive Layer',
-    'mastery': 'Mastery Module',
-  };
-
   const moduleProgress = useMemo(() => {
     return modules.map(slug => {
       const moduleItems = drillableItems.filter(i => i.module === slug);
-      const label = MODULE_TITLES[slug] || slug;
+      const modObj = moduleObjects.find(m => m.slug === slug);
+      const label = modObj?.title || slug;
       if (moduleItems.length === 0) return { key: slug, label, progress: 100, total: 0, reviewed: 0 };
       const reviewed = moduleItems.filter(i => {
         const level = getConfidenceLevel(i.id);
@@ -48,7 +39,7 @@ export function Dashboard({ onNavigate, interviewDate }: Props) {
       }).length;
       return { key: slug, label, progress: Math.round((reviewed / moduleItems.length) * 100), total: moduleItems.length, reviewed };
     });
-  }, [modules, drillableItems]);
+  }, [modules, moduleObjects, drillableItems]);
 
   return (
     <div>

@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS content_items (
   status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'archived')),
   date_added TEXT,
   last_edited_by TEXT NOT NULL DEFAULT 'owner',
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  pre_archive_status TEXT
 );
 
 -- 3. Map links table (ready for Knowledge Map feature)
