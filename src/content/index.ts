@@ -103,4 +103,4 @@ export function getSourceItems(): ContentItem[] {
   return allContent.filter(item => item.source !== null);
 }
 
-export type { ContentItem, ModuleName, Persona, Confidence } from './schema';
+export type { ContentItem, ModuleName, BuiltInModuleName, Persona, Confidence, ContentStatus } from './schema';

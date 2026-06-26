@@ -11,7 +11,11 @@ export const accountIntelContent: ContentItem[] = [
     tags: ["account-intel", "timing", "restructure"],
     confidence: "verified",
     source: { label: "CBA / Mirage / Reuters via TradingView", url: "https://www.commbank.com.au" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 0,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "rodrigo-castillo-cto",
@@ -23,7 +27,11 @@ export const accountIntelContent: ContentItem[] = [
     tags: ["account-intel", "exec", "castillo", "cto"],
     confidence: "verified",
     source: { label: "Mirage / SMBtech, Jun 2026", url: "https://www.commbank.com.au" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 1,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "victoria-ledda-cio",
@@ -35,7 +43,11 @@ export const accountIntelContent: ContentItem[] = [
     tags: ["account-intel", "exec", "ledda", "cio", "goldman"],
     confidence: "verified",
     source: { label: "SMBtech / PeopleMatters, Jun 2026", url: "https://www.commbank.com.au" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 2,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "security-archetype",
@@ -47,7 +59,11 @@ export const accountIntelContent: ContentItem[] = [
     tags: ["account-intel", "exec", "security", "apra", "compliance"],
     confidence: "verified",
     source: { label: "APRA CPS 234/230", url: "https://www.apra.gov.au" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 3,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "apra-cps-234",
@@ -59,7 +75,11 @@ export const accountIntelContent: ContentItem[] = [
     tags: ["account-intel", "apra", "cps-234", "regulation"],
     confidence: "verified",
     source: { label: "APRA", url: "https://www.apra.gov.au" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 4,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "apra-cps-230",
@@ -71,7 +91,11 @@ export const accountIntelContent: ContentItem[] = [
     tags: ["account-intel", "apra", "cps-230", "regulation"],
     confidence: "verified",
     source: { label: "APRA", url: "https://www.apra.gov.au" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 5,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "honesty-discipline-cba",
@@ -83,6 +107,10 @@ export const accountIntelContent: ContentItem[] = [
     tags: ["account-intel", "honesty", "discipline"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 6,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   }
 ];

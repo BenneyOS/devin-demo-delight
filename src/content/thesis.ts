@@ -11,7 +11,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "core", "reframe"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 0,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "performance-marketing-era-1",
@@ -23,7 +27,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "historical-parallel", "advertising"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 1,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "performance-marketing-era-2",
@@ -35,7 +43,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "historical-parallel", "advertising", "google"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 2,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "performance-marketing-era-3",
@@ -47,7 +59,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "historical-parallel", "advertising", "google"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 3,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "software-era-1-inputs",
@@ -59,7 +75,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "software-parallel"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 4,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "software-era-2-measurement",
@@ -71,7 +91,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "software-parallel", "devin"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 5,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "software-era-3-outcomes",
@@ -83,7 +107,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "software-parallel", "vision"],
     confidence: "inferred",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 6,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "bank-wedge-argument",
@@ -95,7 +123,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "bank-fit", "use-case"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 7,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "room-line-bank-wedge",
@@ -107,7 +139,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "delivery-line", "bank-fit"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 8,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "opportunity-cost-argument",
@@ -119,7 +155,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "opportunity-cost", "cio-frame"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 9,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "guarantee-keystone",
@@ -131,7 +171,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "guarantee", "outcome-pricing", "differentiator"],
     confidence: "verified",
     source: { label: "devin.ai/guarantee", url: "https://devin.ai/guarantee/" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 10,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "guarantee-unbundler-line",
@@ -143,7 +187,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "guarantee", "competitive", "delivery-line"],
     confidence: "verified",
     source: { label: "devin.ai/guarantee", url: "https://devin.ai/guarantee/" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 11,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cfo-headline-framing",
@@ -155,7 +203,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "guarantee", "delivery-line", "cio-frame"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 12,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "non-linear-scaling",
@@ -167,7 +219,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "non-linear", "multidevin", "differentiator"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 13,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "non-linear-scaling-line",
@@ -179,7 +235,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "non-linear", "delivery-line"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 14,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "reframe-drill-cto",
@@ -191,7 +251,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "drill", "reframe"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 15,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "reframe-drill-cio",
@@ -203,7 +267,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "drill", "reframe"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 16,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "reframe-drill-security",
@@ -215,7 +283,11 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "drill", "reframe"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 17,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "meta-move-building-in-devin",
@@ -227,6 +299,10 @@ export const thesisContent: ContentItem[] = [
     tags: ["thesis", "meta", "credibility"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 18,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   }
 ];

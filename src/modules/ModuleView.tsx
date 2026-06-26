@@ -1,14 +1,17 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useContext } from 'react';
 import type { ContentItem } from '../content/schema';
 import { ModuleHeader } from '../components/ModuleHeader';
 import { ConfidenceBadge } from '../components/ConfidenceBadge';
 import { DrillCard } from '../components/DrillCard';
 import { Badge } from '../components/Badge';
+import { EditableItem } from '../components/EditableItem';
 import type { Rating } from '../engine/sm2';
 import { calculateNextReview, getReviewState, saveReviewState, getDueItems } from '../engine/sm2';
 import { useNotes } from '../hooks/useNotes';
+import { AuthoringContext } from '../hooks/useAuthoring';
 
 interface Props {
+  module: string;
   title: string;
   subtitle?: string;
   items: ContentItem[];
@@ -16,17 +19,31 @@ interface Props {
 
 type ViewMode = 'study' | 'drill';
 
-export function ModuleView({ title, subtitle, items }: Props) {
+export function ModuleView({ module, title, subtitle, items }: Props) {
   const [viewMode, setViewMode] = useState<ViewMode>('study');
   const [drillIndex, setDrillIndex] = useState(0);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const { addNote, getNotesForItem } = useNotes();
   const [noteInput, setNoteInput] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
+  const [addingItem, setAddingItem] = useState(false);
+  const [newItemTitle, setNewItemTitle] = useState('');
+
+  const authoring = useContext(AuthoringContext);
+  const isAuthoring = authoring?.isAuthoring ?? false;
+
+  const authoredItems = useMemo(() => {
+    if (isAuthoring && authoring) {
+      return authoring.getModuleItems(module);
+    }
+    return items;
+  }, [isAuthoring, authoring, module, items]);
+
+  const displayItems = isAuthoring ? authoredItems : items;
 
   const drillableItems = useMemo(() => 
-    items.filter(i => i.type === 'question' || i.type === 'objection' || i.type === 'story-beat'),
-    [items]
+    displayItems.filter(i => i.type === 'question' || i.type === 'objection' || i.type === 'story-beat'),
+    [displayItems]
   );
 
   const dueItemIds = useMemo(() => getDueItems(drillableItems.map(i => i.id)), [drillableItems]);
@@ -67,6 +84,24 @@ export function ModuleView({ title, subtitle, items }: Props) {
     }
   };
 
+  const handleAddItem = () => {
+    if (newItemTitle.trim() && authoring) {
+      authoring.addNewItem(module, newItemTitle.trim());
+      setNewItemTitle('');
+      setAddingItem(false);
+    }
+  };
+
+  const handleMoveItem = (currentIndex: number, direction: 'up' | 'down') => {
+    if (!authoring) return;
+    const ids = authoredItems.map(i => i.id);
+    const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+    if (targetIndex < 0 || targetIndex >= ids.length) return;
+    const newIds = [...ids];
+    [newIds[currentIndex], newIds[targetIndex]] = [newIds[targetIndex], newIds[currentIndex]];
+    authoring.reorderItems(module, newIds);
+  };
+
   const activeDrillItems = dueItems.length > 0 ? dueItems : drillableItems;
 
   return (
@@ -74,12 +109,12 @@ export function ModuleView({ title, subtitle, items }: Props) {
       <ModuleHeader 
         title={title} 
         subtitle={subtitle} 
-        itemCount={items.length}
+        itemCount={displayItems.length}
         dueCount={dueItems.length}
       />
 
       {/* View Mode Toggle */}
-      {drillableItems.length > 0 && (
+      {drillableItems.length > 0 && !isAuthoring && (
         <div style={{ 
           display: 'flex', 
           gap: 'var(--space-1)', 
@@ -112,10 +147,100 @@ export function ModuleView({ title, subtitle, items }: Props) {
         </div>
       )}
 
-      {/* Study View */}
-      {viewMode === 'study' && (
+      {/* Authoring Mode: Editable Items */}
+      {isAuthoring && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+          {authoredItems.map((item, index) => (
+            <EditableItem
+              key={item.id}
+              item={item}
+              index={index}
+              totalItems={authoredItems.length}
+              onMoveUp={() => handleMoveItem(index, 'up')}
+              onMoveDown={() => handleMoveItem(index, 'down')}
+            />
+          ))}
+
+          {/* Add item */}
+          {addingItem ? (
+            <div style={{
+              display: 'flex',
+              gap: 'var(--space-2)',
+              padding: 'var(--space-3)',
+              background: 'var(--bg-secondary)',
+              border: '1px dashed var(--border-primary)',
+              borderRadius: 'var(--radius-md)',
+            }}>
+              <input
+                type="text"
+                value={newItemTitle}
+                onChange={(e) => setNewItemTitle(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleAddItem(); }}
+                placeholder="Item title..."
+                autoFocus
+                style={{
+                  flex: 1,
+                  padding: 'var(--space-2) var(--space-3)',
+                  border: '1px solid var(--border-primary)',
+                  borderRadius: 'var(--radius-sm)',
+                  background: 'var(--bg-primary)',
+                  color: 'var(--text-primary)',
+                  fontSize: 'var(--text-sm)',
+                }}
+              />
+              <button
+                onClick={handleAddItem}
+                style={{
+                  padding: 'var(--space-2) var(--space-4)',
+                  background: 'var(--accent)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: 'var(--text-sm)',
+                  cursor: 'pointer',
+                }}
+              >
+                Add
+              </button>
+              <button
+                onClick={() => { setAddingItem(false); setNewItemTitle(''); }}
+                style={{
+                  padding: 'var(--space-2) var(--space-3)',
+                  background: 'transparent',
+                  color: 'var(--text-tertiary)',
+                  border: '1px solid var(--border-primary)',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: 'var(--text-sm)',
+                  cursor: 'pointer',
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setAddingItem(true)}
+              style={{
+                padding: 'var(--space-3)',
+                background: 'transparent',
+                color: 'var(--accent)',
+                border: '1px dashed var(--accent)',
+                borderRadius: 'var(--radius-md)',
+                fontSize: 'var(--text-sm)',
+                cursor: 'pointer',
+                transition: 'var(--transition-fast)',
+              }}
+            >
+              + Add item
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Study View (non-authoring) */}
+      {!isAuthoring && viewMode === 'study' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-          {items.map(item => {
+          {displayItems.map(item => {
             const isExpanded = expandedItems.has(item.id);
             const notes = getNotesForItem(item.id);
             
@@ -301,7 +426,7 @@ export function ModuleView({ title, subtitle, items }: Props) {
       )}
 
       {/* Drill View */}
-      {viewMode === 'drill' && (
+      {!isAuthoring && viewMode === 'drill' && (
         <div>
           {activeDrillItems.length > 0 ? (
             <>

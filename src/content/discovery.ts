@@ -11,7 +11,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "methodology", "spin"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 0,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cto-prioritization-1",
@@ -23,7 +27,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "cto", "prioritization", "time-allocation"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 1,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cto-prioritization-2",
@@ -35,7 +43,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "cto", "prioritization", "tech-debt"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 2,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cto-risk-1",
@@ -47,7 +59,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "cto", "risk", "devsecops"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 3,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cto-risk-2",
@@ -59,7 +75,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "cto", "risk", "eol"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 4,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cto-opportunity-cost",
@@ -71,7 +91,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "cto", "opportunity-cost"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 5,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cto-qualifier",
@@ -83,7 +107,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "cto", "qualifier", "trap-free"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 6,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cio-prioritization-1",
@@ -95,7 +123,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "cio", "prioritization", "capacity-gap"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 7,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cio-prioritization-2",
@@ -107,7 +139,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "cio", "prioritization", "roadmap"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 8,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cio-risk-1",
@@ -119,7 +155,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "cio", "risk", "legacy"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 9,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cio-opportunity-cost-1",
@@ -131,7 +171,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "cio", "opportunity-cost", "quantifying"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 10,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cio-opportunity-cost-2",
@@ -143,7 +187,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "cio", "opportunity-cost", "thesis-question"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 11,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cio-opportunity-cost-3",
@@ -155,7 +203,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "cio", "opportunity-cost", "guarantee-setup"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 12,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cio-qualifier",
@@ -167,7 +219,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "cio", "qualifier", "trap-free", "goldman"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 13,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "security-prioritization-1",
@@ -179,7 +235,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "security", "prioritization", "backlog"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 14,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "security-prioritization-2",
@@ -191,7 +251,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "security", "prioritization", "cps-234", "evidence"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 15,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "security-risk-1",
@@ -203,7 +267,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "security", "risk", "exposure-window", "cve"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 16,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "security-risk-2",
@@ -215,7 +283,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "security", "risk", "demonstrable-action"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 17,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "security-opportunity-cost-1",
@@ -227,7 +299,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "security", "opportunity-cost", "parallel"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 18,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "security-opportunity-cost-2",
@@ -239,7 +315,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "security", "opportunity-cost", "controls"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 19,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "security-qualifier",
@@ -251,7 +331,11 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "security", "qualifier", "trap-free"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 20,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "discovery-demo-handoff",
@@ -263,6 +347,10 @@ export const discoveryContent: ContentItem[] = [
     tags: ["discovery", "handoff", "transition", "delivery-line"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 21,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   }
 ];

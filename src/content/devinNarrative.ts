@@ -11,7 +11,11 @@ export const devinNarrativeContent: ContentItem[] = [
     tags: ["devin-narrative", "architecture", "conceptual-model"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 0,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "multidevin-capability",
@@ -23,7 +27,11 @@ export const devinNarrativeContent: ContentItem[] = [
     tags: ["devin-narrative", "multidevin", "parallel", "scaling"],
     confidence: "verified",
     source: { label: "Contrary Research", url: "https://research.contrary.com" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 1,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "devin-review",
@@ -35,7 +43,11 @@ export const devinNarrativeContent: ContentItem[] = [
     tags: ["devin-narrative", "devin-review", "governance", "audit"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 2,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "deepwiki",
@@ -47,7 +59,11 @@ export const devinNarrativeContent: ContentItem[] = [
     tags: ["devin-narrative", "deepwiki", "documentation"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 3,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "devin-honest-framing",
@@ -59,7 +75,11 @@ export const devinNarrativeContent: ContentItem[] = [
     tags: ["devin-narrative", "honest-framing", "limitations", "credibility"],
     confidence: "verified",
     source: { label: "Cognition 2025 review", url: "https://devin.ai" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 4,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "demo-run-of-show",
@@ -71,7 +91,11 @@ export const devinNarrativeContent: ContentItem[] = [
     tags: ["devin-narrative", "demo", "run-of-show", "angular"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 5,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "control-verification-security",
@@ -83,7 +107,11 @@ export const devinNarrativeContent: ContentItem[] = [
     tags: ["devin-narrative", "controls", "security", "vpc", "audit"],
     confidence: "verified",
     source: { label: "Contrary Research", url: "https://research.contrary.com" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 6,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "live-failure-recovery",
@@ -95,7 +123,11 @@ export const devinNarrativeContent: ContentItem[] = [
     tags: ["devin-narrative", "demo", "recovery", "mastery"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 7,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "citi-proof-point",
@@ -107,7 +139,11 @@ export const devinNarrativeContent: ContentItem[] = [
     tags: ["devin-narrative", "proof-point", "citi", "scale"],
     confidence: "verified",
     source: { label: "American Banker, Jul 2025", url: "https://www.americanbanker.com" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 8,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "goldman-proof-point",
@@ -119,7 +155,11 @@ export const devinNarrativeContent: ContentItem[] = [
     tags: ["devin-narrative", "proof-point", "goldman", "ledda-hook"],
     confidence: "verified",
     source: { label: "IBM Think, 2025", url: "https://www.ibm.com/think" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 9,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "nubank-proof-point",
@@ -131,7 +171,11 @@ export const devinNarrativeContent: ContentItem[] = [
     tags: ["devin-narrative", "proof-point", "nubank", "migration"],
     confidence: "verified",
     source: { label: "devin.ai/customers", url: "https://devin.ai/customers" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 10,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "bank-etl-proof-point",
@@ -143,7 +187,11 @@ export const devinNarrativeContent: ContentItem[] = [
     tags: ["devin-narrative", "proof-point", "bank", "etl", "speed"],
     confidence: "verified",
     source: { label: "Cognition 2025 review", url: "https://devin.ai" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 11,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "litera-proof-point",
@@ -155,7 +203,11 @@ export const devinNarrativeContent: ContentItem[] = [
     tags: ["devin-narrative", "proof-point", "litera", "testing"],
     confidence: "verified",
     source: { label: "Cognition 2025 review", url: "https://devin.ai" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 12,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "itau-proof-point",
@@ -167,6 +219,10 @@ export const devinNarrativeContent: ContentItem[] = [
     tags: ["devin-narrative", "proof-point", "itau", "bank"],
     confidence: "verified",
     source: { label: "devin.ai/customers", url: "https://devin.ai/customers" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 13,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   }
 ];

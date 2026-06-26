@@ -9,7 +9,7 @@
 export type ContentType = 'fact' | 'question' | 'objection' | 'card' | 'source' | 'story-beat';
 export type Confidence = 'verified' | 'inferred' | 'claim';
 export type Persona = 'CTO' | 'CIO' | 'Security';
-export type ModuleName = 
+export type BuiltInModuleName = 
   | 'thesis' 
   | 'account-intel' 
   | 'repo-rationale' 
@@ -17,6 +17,10 @@ export type ModuleName =
   | 'devin-narrative' 
   | 'competitive' 
   | 'mastery';
+
+export type ModuleName = BuiltInModuleName | (string & {});
+
+export type ContentStatus = 'active' | 'archived';
 
 export interface ContentSource {
   label: string;
@@ -34,6 +38,10 @@ export interface ContentItem {
   confidence: Confidence;
   source: ContentSource | null;
   dateAdded: string;
+  order: number;
+  status: ContentStatus;
+  lastEditedBy: string;
+  lastEditedAt: string;
 }
 
 /**
@@ -53,9 +61,8 @@ export function validateContentItem(item: unknown, index: number): item is Conte
     errors.push(`id must be kebab-case string, got "${i.id}"`);
   }
 
-  const validModules: ModuleName[] = ['thesis', 'account-intel', 'repo-rationale', 'discovery', 'devin-narrative', 'competitive', 'mastery'];
-  if (!validModules.includes(i.module as ModuleName)) {
-    errors.push(`module must be one of ${validModules.join(', ')}, got "${i.module}"`);
+  if (typeof i.module !== 'string' || i.module.length === 0) {
+    errors.push(`module must be a non-empty string, got "${i.module}"`);
   }
 
   const validTypes: ContentType[] = ['fact', 'question', 'objection', 'card', 'source', 'story-beat'];
@@ -95,6 +102,23 @@ export function validateContentItem(item: unknown, index: number): item is Conte
 
   if (typeof i.dateAdded !== 'string') {
     errors.push('dateAdded must be a string');
+  }
+
+  if (typeof i.order !== 'number') {
+    errors.push('order must be a number');
+  }
+
+  const validStatuses: ContentStatus[] = ['active', 'archived'];
+  if (!validStatuses.includes(i.status as ContentStatus)) {
+    errors.push(`status must be one of ${validStatuses.join(', ')}, got "${i.status}"`);
+  }
+
+  if (typeof i.lastEditedBy !== 'string') {
+    errors.push('lastEditedBy must be a string');
+  }
+
+  if (typeof i.lastEditedAt !== 'string') {
+    errors.push('lastEditedAt must be a string');
   }
 
   if (errors.length > 0) {

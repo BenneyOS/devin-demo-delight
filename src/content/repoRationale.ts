@@ -11,7 +11,11 @@ export const repoRationaleContent: ContentItem[] = [
     tags: ["repo-rationale", "opening", "credibility"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 0,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "selection-criteria",
@@ -23,7 +27,11 @@ export const repoRationaleContent: ContentItem[] = [
     tags: ["repo-rationale", "criteria", "methodology"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 1,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "bitwarden-framework-match",
@@ -35,7 +43,11 @@ export const repoRationaleContent: ContentItem[] = [
     tags: ["repo-rationale", "bitwarden", "angular", "typescript"],
     confidence: "verified",
     source: { label: "github.com/bitwarden", url: "https://github.com/bitwarden/clients" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 2,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "bitwarden-upgrade-pressure",
@@ -47,7 +59,11 @@ export const repoRationaleContent: ContentItem[] = [
     tags: ["repo-rationale", "bitwarden", "renovate", "upgrade-pressure"],
     confidence: "verified",
     source: { label: "github.com/bitwarden", url: "https://github.com/bitwarden/clients" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 3,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "bitwarden-security-critical",
@@ -59,7 +75,11 @@ export const repoRationaleContent: ContentItem[] = [
     tags: ["repo-rationale", "bitwarden", "security", "encryption"],
     confidence: "verified",
     source: { label: "github.com/bitwarden", url: "https://github.com/bitwarden/clients" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 4,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "bitwarden-polyglot",
@@ -71,7 +91,11 @@ export const repoRationaleContent: ContentItem[] = [
     tags: ["repo-rationale", "bitwarden", "polyglot", "land-and-expand"],
     confidence: "verified",
     source: { label: "github.com/bitwarden", url: "https://github.com/bitwarden" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 5,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "bitwarden-audit-tooling",
@@ -83,7 +107,11 @@ export const repoRationaleContent: ContentItem[] = [
     tags: ["repo-rationale", "bitwarden", "splunk", "audit"],
     confidence: "verified",
     source: { label: "github.com/bitwarden", url: "https://github.com/bitwarden" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 6,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "bitwarden-mature-hygiene",
@@ -95,7 +123,11 @@ export const repoRationaleContent: ContentItem[] = [
     tags: ["repo-rationale", "bitwarden", "ci-cd", "governance"],
     confidence: "verified",
     source: { label: "github.com/bitwarden", url: "https://github.com/bitwarden/clients" },
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 7,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "cba-mapping-table",
@@ -107,7 +139,11 @@ export const repoRationaleContent: ContentItem[] = [
     tags: ["repo-rationale", "mapping", "cba-proxy"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 8,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   },
   {
     id: "use-case-scope",
@@ -119,6 +155,10 @@ export const repoRationaleContent: ContentItem[] = [
     tags: ["repo-rationale", "scope", "use-case", "land-and-expand"],
     confidence: "verified",
     source: null,
-    dateAdded: "2026-06-25"
+    dateAdded: "2026-06-25",
+    order: 9,
+    status: "active",
+    lastEditedBy: "owner",
+    lastEditedAt: "2026-06-25"
   }
 ];
