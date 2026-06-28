@@ -9,9 +9,12 @@ import { ArchiveDrawer } from './components/ArchiveDrawer';
 import { BackupExport } from './components/BackupExport';
 import { OwnerKeyPrompt } from './components/OwnerKeyPrompt';
 import { CategoryNav } from './components/CategoryNav';
+import { WarRoom } from './modules/WarRoom';
+import { useInterviewers } from './hooks/useInterviewers';
+import { BrandMark } from './components/BrandMark';
 import './index.css';
 
-type Page = 'dashboard' | 'sources' | 'presenter' | 'archive' | 'backup' | string;
+type Page = 'dashboard' | 'sources' | 'presenter' | 'archive' | 'backup' | 'warroom' | string;
 
 function AppContent() {
   const [theme, toggleTheme] = useTheme();
@@ -26,6 +29,7 @@ function AppContent() {
     renameModule, archiveModule, reorderModuleList, addNewModule,
     getModuleItemCount,
   } = ctx;
+  const { interviewers } = useInterviewers();
 
   const navigate = (page: string) => {
     setCurrentPage(page as Page);
@@ -36,7 +40,7 @@ function AppContent() {
     return <PresenterMode onExit={() => setPresenterMode(false)} />;
   }
 
-  const isModule = currentPage !== 'dashboard' && currentPage !== 'sources' && currentPage !== 'presenter' && currentPage !== 'archive' && currentPage !== 'backup';
+  const isModule = currentPage !== 'dashboard' && currentPage !== 'sources' && currentPage !== 'presenter' && currentPage !== 'archive' && currentPage !== 'backup' && currentPage !== 'warroom';
 
   if (loading) {
     return (
@@ -117,17 +121,50 @@ function AppContent() {
       {/* Navigation */}
       <nav className={`app-nav ${navOpen ? 'open' : ''}`} aria-label="Main navigation">
         <div style={{ padding: 'var(--space-6) var(--space-4)' }}>
-          {/* Logo/Title */}
+          {/* Brand mark + engagement header */}
           <div style={{ marginBottom: 'var(--space-6)', paddingBottom: 'var(--space-4)', borderBottom: '1px solid var(--border-secondary)' }}>
-            <h2 style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
-              Trusted Advisor OS
-            </h2>
-            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: '2px' }}>
-              Cognition M1 Prep
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-2)' }}>
+              <BrandMark size={28} />
+              <h2 style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                Trusted Advisor OS
+              </h2>
+            </div>
+            <p style={{ fontSize: '10px', color: 'var(--text-tertiary)', letterSpacing: '0.02em', lineHeight: 1.4 }}>
+              Cognition <span style={{ color: 'var(--text-secondary)' }}>&times;</span> Commonwealth Bank of Australia
             </p>
           </div>
 
-          {/* Nav items */}
+          {/* Dashboard + War Room nav */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: 'var(--space-4)' }}>
+            <button
+              onClick={() => navigate('dashboard')}
+              style={{
+                display: 'block', width: '100%', textAlign: 'left',
+                padding: 'var(--space-2) var(--space-3)', border: 'none',
+                borderRadius: 'var(--radius-sm)',
+                background: currentPage === 'dashboard' ? 'var(--accent-subtle)' : 'transparent',
+                color: currentPage === 'dashboard' ? 'var(--accent)' : 'var(--text-secondary)',
+                fontSize: 'var(--text-sm)', fontWeight: currentPage === 'dashboard' ? 600 : 400, cursor: 'pointer',
+              }}
+            >
+              Dashboard
+            </button>
+            <button
+              onClick={() => navigate('warroom')}
+              style={{
+                display: 'block', width: '100%', textAlign: 'left',
+                padding: 'var(--space-2) var(--space-3)', border: 'none',
+                borderRadius: 'var(--radius-sm)',
+                background: currentPage === 'warroom' ? 'var(--accent-subtle)' : 'transparent',
+                color: currentPage === 'warroom' ? 'var(--accent)' : 'var(--text-secondary)',
+                fontSize: 'var(--text-sm)', fontWeight: currentPage === 'warroom' ? 600 : 400, cursor: 'pointer',
+              }}
+            >
+              War Room
+            </button>
+          </div>
+
+          {/* Module nav items */}
           <CategoryNav
             moduleObjects={moduleObjects}
             currentPage={currentPage}
@@ -281,8 +318,9 @@ function AppContent() {
       <main className="app-main">
         <div className="app-content">
           {currentPage === 'dashboard' && (
-            <Dashboard onNavigate={navigate} interviewDate="2026-07-10" />
+            <Dashboard onNavigate={navigate} interviewers={interviewers} />
           )}
+          {currentPage === 'warroom' && <WarRoom />}
           {currentPage === 'sources' && <SourceLibrary />}
           {currentPage === 'archive' && (
             <div>
