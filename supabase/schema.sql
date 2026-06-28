@@ -1,5 +1,5 @@
 -- Trusted Advisor OS — Supabase Schema
--- Tables: modules, content_items, map_links, annotations, study_state
+-- Tables: modules, content_items, map_links, annotations, study_state, interviewers
 -- RLS: public SELECT; INSERT/UPDATE/DELETE gated by owner edit-key
 
 -- 0. Enable realtime
@@ -50,6 +50,23 @@ CREATE TABLE IF NOT EXISTS annotations (
   content_item_id TEXT NOT NULL REFERENCES content_items(id) ON DELETE CASCADE,
   note TEXT NOT NULL,
   pinned BOOLEAN NOT NULL DEFAULT false,
+  "order" INTEGER NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- 4b. Interviewers table (War Room)
+CREATE TABLE IF NOT EXISTS interviewers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT '',
+  background TEXT NOT NULL DEFAULT '',
+  will_probe TEXT NOT NULL DEFAULT '',
+  my_angle TEXT NOT NULL DEFAULT '',
+  likely_questions TEXT NOT NULL DEFAULT '',
+  my_hook TEXT NOT NULL DEFAULT '',
+  "order" INTEGER NOT NULL DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'archived')),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -126,6 +143,7 @@ ALTER TABLE content_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE map_links ENABLE ROW LEVEL SECURITY;
 ALTER TABLE annotations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE study_state ENABLE ROW LEVEL SECURITY;
+ALTER TABLE interviewers ENABLE ROW LEVEL SECURITY;
 ALTER TABLE app_settings ENABLE ROW LEVEL SECURITY;
 
 -- Public read policies
@@ -160,6 +178,16 @@ CREATE POLICY "Owner insert study_state" ON study_state FOR INSERT WITH CHECK (i
 CREATE POLICY "Owner update study_state" ON study_state FOR UPDATE USING (is_owner());
 CREATE POLICY "Owner delete study_state" ON study_state FOR DELETE USING (is_owner());
 
+-- Owner write policies (interviewers)
+CREATE POLICY "Public read interviewers" ON interviewers FOR SELECT USING (true);
+CREATE POLICY "Owner insert interviewers" ON interviewers FOR INSERT WITH CHECK (is_owner());
+CREATE POLICY "Owner update interviewers" ON interviewers FOR UPDATE USING (is_owner());
+CREATE POLICY "Owner delete interviewers" ON interviewers FOR DELETE USING (is_owner());
+
+CREATE OR REPLACE TRIGGER interviewers_updated_at
+  BEFORE UPDATE ON interviewers
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
 -- app_settings: only readable by is_owner, not publicly
 CREATE POLICY "Owner read settings" ON app_settings FOR SELECT USING (is_owner());
 CREATE POLICY "Owner update settings" ON app_settings FOR UPDATE USING (is_owner());
@@ -168,3 +196,8 @@ CREATE POLICY "Owner update settings" ON app_settings FOR UPDATE USING (is_owner
 ALTER PUBLICATION supabase_realtime ADD TABLE modules;
 ALTER PUBLICATION supabase_realtime ADD TABLE content_items;
 ALTER PUBLICATION supabase_realtime ADD TABLE annotations;
+ALTER PUBLICATION supabase_realtime ADD TABLE interviewers;
+
+-- 10. Seed interview_at setting
+INSERT INTO app_settings (key, value) VALUES ('interview_at', '2026-07-01T14:00:00+10:00')
+ON CONFLICT (key) DO NOTHING;

@@ -324,29 +324,6 @@ export function CategoryNav({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-      {/* Dashboard (always first, not draggable) */}
-      <button
-        onClick={() => onNavigate('dashboard')}
-        style={{
-          display: 'block',
-          width: '100%',
-          textAlign: 'left',
-          padding: 'var(--space-2) var(--space-3)',
-          border: 'none',
-          borderRadius: 'var(--radius-sm)',
-          background: currentPage === 'dashboard' ? 'var(--accent-subtle)' : 'transparent',
-          color: currentPage === 'dashboard' ? 'var(--accent)' : 'var(--text-secondary)',
-          fontSize: 'var(--text-sm)',
-          fontWeight: currentPage === 'dashboard' ? 500 : 400,
-          cursor: 'pointer',
-          transition: 'var(--transition-fast)',
-        }}
-        onMouseEnter={(e) => { if (currentPage !== 'dashboard') e.currentTarget.style.background = 'var(--bg-hover)'; }}
-        onMouseLeave={(e) => { if (currentPage !== 'dashboard') e.currentTarget.style.background = 'transparent'; }}
-      >
-        Dashboard
-      </button>
-
       {/* Module categories (draggable when authoring) */}
       {moduleObjects.map((mod, idx) => (
         <CategoryNavItem

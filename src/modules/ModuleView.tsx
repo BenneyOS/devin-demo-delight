@@ -23,9 +23,12 @@ export function ModuleView({ module, title, subtitle, items }: Props) {
   const [viewMode, setViewMode] = useState<ViewMode>('study');
   const [drillIndex, setDrillIndex] = useState(0);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
-  const { addNote, getNotesForItem } = useNotes();
+  const { addNote, editNote, deleteNote, reorderNotes, getNotesForItem } = useNotes();
   const [noteInput, setNoteInput] = useState<string | null>(null);
   const [noteText, setNoteText] = useState('');
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [editingNoteText, setEditingNoteText] = useState('');
+  const [deletingNoteId, setDeletingNoteId] = useState<string | null>(null);
   const [addingItem, setAddingItem] = useState(false);
   const [newItemTitle, setNewItemTitle] = useState('');
 
@@ -335,17 +338,143 @@ export function ModuleView({ module, title, subtitle, items }: Props) {
                     {/* Notes */}
                     {notes.length > 0 && (
                       <div style={{ marginBottom: 'var(--space-3)' }}>
-                        {notes.map(note => (
-                          <div key={note.id} style={{ 
-                            fontSize: 'var(--text-sm)', 
+                        {notes.map((note, noteIdx) => (
+                          <div key={note.id} style={{
+                            fontSize: 'var(--text-sm)',
                             color: 'var(--text-secondary)',
                             padding: 'var(--space-2) var(--space-3)',
                             background: 'var(--warning-subtle)',
                             borderRadius: 'var(--radius-sm)',
                             borderLeft: '3px solid var(--warning)',
                             marginBottom: 'var(--space-1)',
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: 'var(--space-2)',
                           }}>
-                            {note.text}
+                            {editingNoteId === note.id ? (
+                              <input
+                                type="text"
+                                value={editingNoteText}
+                                onChange={e => setEditingNoteText(e.target.value)}
+                                onBlur={() => {
+                                  if (editingNoteText.trim() && editingNoteText.trim() !== note.text) {
+                                    editNote(note.id, editingNoteText.trim());
+                                  }
+                                  setEditingNoteId(null);
+                                }}
+                                onKeyDown={e => {
+                                  if (e.key === 'Enter') {
+                                    if (editingNoteText.trim() && editingNoteText.trim() !== note.text) {
+                                      editNote(note.id, editingNoteText.trim());
+                                    }
+                                    setEditingNoteId(null);
+                                  }
+                                  if (e.key === 'Escape') {
+                                    setEditingNoteId(null);
+                                  }
+                                }}
+                                autoFocus
+                                style={{
+                                  flex: 1,
+                                  padding: 'var(--space-1) var(--space-2)',
+                                  border: '1px solid var(--border-primary)',
+                                  borderRadius: 'var(--radius-sm)',
+                                  background: 'var(--bg-primary)',
+                                  color: 'var(--text-primary)',
+                                  fontSize: 'var(--text-sm)',
+                                }}
+                              />
+                            ) : (
+                              <>
+                                <span
+                                  style={{ flex: 1, cursor: isAuthoring ? 'text' : 'default' }}
+                                  onClick={() => {
+                                    if (isAuthoring) {
+                                      setEditingNoteId(note.id);
+                                      setEditingNoteText(note.text);
+                                    }
+                                  }}
+                                >
+                                  {note.text}
+                                </span>
+                                {isAuthoring && (
+                                  <span style={{ display: 'flex', gap: '2px', flexShrink: 0, alignItems: 'center' }}>
+                                    {/* Reorder up */}
+                                    <button
+                                      onClick={() => {
+                                        if (noteIdx > 0) {
+                                          const ids = notes.map(n => n.id);
+                                          [ids[noteIdx], ids[noteIdx - 1]] = [ids[noteIdx - 1], ids[noteIdx]];
+                                          reorderNotes(item.id, ids);
+                                        }
+                                      }}
+                                      disabled={noteIdx === 0}
+                                      title="Move up"
+                                      style={{
+                                        border: 'none', background: 'transparent', cursor: noteIdx === 0 ? 'default' : 'pointer',
+                                        color: noteIdx === 0 ? 'var(--text-tertiary)' : 'var(--text-secondary)', fontSize: '10px', padding: '0 2px',
+                                        opacity: noteIdx === 0 ? 0.4 : 1,
+                                      }}
+                                    >&#9650;</button>
+                                    {/* Reorder down */}
+                                    <button
+                                      onClick={() => {
+                                        if (noteIdx < notes.length - 1) {
+                                          const ids = notes.map(n => n.id);
+                                          [ids[noteIdx], ids[noteIdx + 1]] = [ids[noteIdx + 1], ids[noteIdx]];
+                                          reorderNotes(item.id, ids);
+                                        }
+                                      }}
+                                      disabled={noteIdx === notes.length - 1}
+                                      title="Move down"
+                                      style={{
+                                        border: 'none', background: 'transparent', cursor: noteIdx === notes.length - 1 ? 'default' : 'pointer',
+                                        color: noteIdx === notes.length - 1 ? 'var(--text-tertiary)' : 'var(--text-secondary)', fontSize: '10px', padding: '0 2px',
+                                        opacity: noteIdx === notes.length - 1 ? 0.4 : 1,
+                                      }}
+                                    >&#9660;</button>
+                                    {/* Edit */}
+                                    <button
+                                      onClick={() => { setEditingNoteId(note.id); setEditingNoteText(note.text); }}
+                                      title="Edit"
+                                      style={{
+                                        border: 'none', background: 'transparent', cursor: 'pointer',
+                                        color: 'var(--text-tertiary)', fontSize: '11px', padding: '0 2px',
+                                      }}
+                                    >&#9998;</button>
+                                    {/* Delete */}
+                                    {deletingNoteId === note.id ? (
+                                      <span style={{ display: 'flex', gap: '2px', fontSize: 'var(--text-xs)' }}>
+                                        <button
+                                          onClick={() => { deleteNote(note.id); setDeletingNoteId(null); }}
+                                          style={{
+                                            border: 'none', background: '#ef4444', color: '#fff', cursor: 'pointer',
+                                            borderRadius: 'var(--radius-sm)', padding: '1px 6px', fontSize: '11px',
+                                          }}
+                                        >Confirm</button>
+                                        <button
+                                          onClick={() => setDeletingNoteId(null)}
+                                          style={{
+                                            border: '1px solid var(--border-primary)', background: 'transparent',
+                                            color: 'var(--text-tertiary)', cursor: 'pointer',
+                                            borderRadius: 'var(--radius-sm)', padding: '1px 6px', fontSize: '11px',
+                                          }}
+                                        >Cancel</button>
+                                      </span>
+                                    ) : (
+                                      <button
+                                        onClick={() => setDeletingNoteId(note.id)}
+                                        title="Delete"
+                                        style={{
+                                          border: 'none', background: 'transparent', cursor: 'pointer',
+                                          color: 'var(--text-tertiary)', fontSize: '11px', padding: '0 2px',
+                                        }}
+                                      >&#10005;</button>
+                                    )}
+                                  </span>
+                                )}
+                              </>
+                            )}
                           </div>
                         ))}
                       </div>

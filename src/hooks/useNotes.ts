@@ -2,6 +2,7 @@
  * Annotations hook — Supabase-backed.
  *
  * Reads/writes from the `annotations` table.
+ * Supports add, edit (inline), delete (with confirm), reorder, and pin.
  * Caches locally; re-fetches on mount and after writes.
  */
 
@@ -14,6 +15,7 @@ export interface ReflectionNote {
   text: string;
   createdAt: string;
   pinned: boolean;
+  order: number;
 }
 
 interface DbAnnotation {
@@ -21,6 +23,7 @@ interface DbAnnotation {
   content_item_id: string;
   note: string;
   pinned: boolean;
+  order: number;
   created_at: string;
   updated_at: string;
 }
@@ -32,6 +35,7 @@ function dbRowToNote(row: DbAnnotation): ReflectionNote {
     text: row.note,
     createdAt: row.created_at,
     pinned: row.pinned,
+    order: row.order ?? 0,
   };
 }
 
@@ -42,6 +46,7 @@ export function useNotes() {
     const { data, error } = await supabase
       .from('annotations')
       .select('*')
+      .order('order')
       .order('created_at');
 
     if (error) {
@@ -74,15 +79,21 @@ export function useNotes() {
     const id = crypto.randomUUID();
     const now = new Date().toISOString();
 
+    // Calculate next order for this item's notes
+    const itemNotes = notes.filter(n => n.itemId === itemId);
+    const maxOrder = itemNotes.length > 0
+      ? Math.max(...itemNotes.map(n => n.order))
+      : -1;
+
     const note: ReflectionNote = {
       id,
       itemId,
       text,
       createdAt: now,
       pinned: false,
+      order: maxOrder + 1,
     };
 
-    // Optimistic add
     setNotes(prev => [...prev, note]);
 
     supabase
@@ -92,6 +103,7 @@ export function useNotes() {
         content_item_id: itemId,
         note: text,
         pinned: false,
+        order: maxOrder + 1,
       })
       .then(({ error }) => {
         if (error) {
@@ -101,10 +113,28 @@ export function useNotes() {
       });
 
     return note;
-  }, []);
+  }, [notes]);
+
+  const editNote = useCallback((noteId: string, newText: string) => {
+    const prev = [...notes];
+    setNotes(n => n.map(note =>
+      note.id === noteId ? { ...note, text: newText } : note
+    ));
+
+    supabase
+      .from('annotations')
+      .update({ note: newText })
+      .eq('id', noteId)
+      .then(({ error }) => {
+        if (error) {
+          console.error('Failed to edit annotation:', error);
+          setNotes(prev);
+        }
+      });
+  }, [notes]);
 
   const deleteNote = useCallback((noteId: string) => {
-    const prev = notes;
+    const prev = [...notes];
     setNotes(n => n.filter(note => note.id !== noteId));
 
     supabase
@@ -118,6 +148,34 @@ export function useNotes() {
         }
       });
   }, [notes]);
+
+  const reorderNotes = useCallback((_itemId: string, orderedIds: string[]) => {
+    const prev = [...notes];
+
+    setNotes(n => {
+      const updated = [...n];
+      for (let i = 0; i < orderedIds.length; i++) {
+        const idx = updated.findIndex(note => note.id === orderedIds[i]);
+        if (idx >= 0) {
+          updated[idx] = { ...updated[idx], order: i };
+        }
+      }
+      return updated;
+    });
+
+    const updates = orderedIds.map((id, i) =>
+      supabase.from('annotations').update({ order: i }).eq('id', id)
+    );
+
+    Promise.all(updates).then(results => {
+      const failed = results.find(r => r.error);
+      if (failed) {
+        console.error('Failed to reorder annotations:', failed);
+        setNotes(prev);
+        fetchNotes();
+      }
+    });
+  }, [notes, fetchNotes]);
 
   const togglePin = useCallback((noteId: string) => {
     const note = notes.find(n => n.id === noteId);
@@ -143,12 +201,14 @@ export function useNotes() {
   }, [notes]);
 
   const getNotesForItem = useCallback((itemId: string) => {
-    return notes.filter(n => n.itemId === itemId);
+    return notes
+      .filter(n => n.itemId === itemId)
+      .sort((a, b) => a.order - b.order);
   }, [notes]);
 
   const getPinnedNotes = useCallback(() => {
     return notes.filter(n => n.pinned);
   }, [notes]);
 
-  return { notes, addNote, deleteNote, togglePin, getNotesForItem, getPinnedNotes };
+  return { notes, addNote, editNote, deleteNote, reorderNotes, togglePin, getNotesForItem, getPinnedNotes };
 }

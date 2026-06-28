@@ -161,6 +161,10 @@ interface SupabaseContentState {
   archiveModule: (moduleId: string) => void;
   restoreModule: (moduleId: string) => void;
   purgeModule: (moduleId: string) => void;
+
+  // Settings
+  interviewAt: string | null;
+  setInterviewAt: (dateStr: string) => void;
 }
 
 const SupabaseContentContext = createContext<SupabaseContentState | null>(null);
@@ -176,6 +180,7 @@ export function SupabaseContentProvider({ children }: { children: ReactNode }) {
   const [isOwner, setIsOwner] = useState(!!getOwnerKey());
   const [ownerKeyPromptOpen, setOwnerKeyPromptOpen] = useState(false);
   const [editedIds, setEditedIds] = useState<Set<string>>(new Set());
+  const [interviewAt, setInterviewAtState] = useState<string | null>(null);
 
   const moduleMapRef = useRef<Map<string, DbModule>>(new Map());
 
@@ -201,6 +206,22 @@ export function SupabaseContentProvider({ children }: { children: ReactNode }) {
 
       setDbModules(modRes.data || []);
       setDbItems(itemRes.data || []);
+
+      // Fetch interview_at setting (public read blocked by RLS on app_settings,
+      // so fetch via a direct query with owner key if present, otherwise use default)
+      try {
+        const settingsRes = await supabase
+          .from('app_settings')
+          .select('value')
+          .eq('key', 'interview_at')
+          .single();
+        if (settingsRes.data?.value) {
+          setInterviewAtState(settingsRes.data.value);
+        }
+      } catch {
+        // Settings read may fail without owner key — use default
+      }
+
       setError(null);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -801,6 +822,20 @@ export function SupabaseContentProvider({ children }: { children: ReactNode }) {
       });
   }, [dbModules, dbItems, fetchData]);
 
+  const setInterviewAt = useCallback((dateStr: string) => {
+    setInterviewAtState(dateStr);
+    supabase
+      .from('app_settings')
+      .update({ value: dateStr })
+      .eq('key', 'interview_at')
+      .then(({ error }) => {
+        if (error) {
+          showErrorToast('Failed to save interview date.');
+          console.error('Set interview_at error:', error);
+        }
+      });
+  }, []);
+
   const hasChanges = editedIds.size > 0;
   const changeCount = editedIds.size;
   const isEdited = useCallback((id: string) => editedIds.has(id), [editedIds]);
@@ -846,6 +881,8 @@ export function SupabaseContentProvider({ children }: { children: ReactNode }) {
     archiveModule,
     restoreModule,
     purgeModule,
+    interviewAt,
+    setInterviewAt,
   }), [
     loading, error, allContent, activeContent, archivedContent, modules,
     moduleObjects, allModuleObjects, archivedModules,
@@ -855,6 +892,7 @@ export function SupabaseContentProvider({ children }: { children: ReactNode }) {
     archive, restore, purge, addNewItem, addNewModule, revert, discardAll,
     hasChanges, changeCount, isEdited, reorderModuleList, refresh,
     renameModule, archiveModule, restoreModule, purgeModule,
+    interviewAt, setInterviewAt,
   ]);
 
   return (
