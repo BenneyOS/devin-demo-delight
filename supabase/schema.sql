@@ -197,7 +197,25 @@ ALTER PUBLICATION supabase_realtime ADD TABLE modules;
 ALTER PUBLICATION supabase_realtime ADD TABLE content_items;
 ALTER PUBLICATION supabase_realtime ADD TABLE annotations;
 ALTER PUBLICATION supabase_realtime ADD TABLE interviewers;
+ALTER PUBLICATION supabase_realtime ADD TABLE strategy_content;
 
 -- 10. Seed interview_at setting
 INSERT INTO app_settings (key, value) VALUES ('interview_at', '2026-07-01T14:00:00+10:00')
 ON CONFLICT (key) DO NOTHING;
+
+-- 11. Strategy content table (editable strategy view fields)
+CREATE TABLE IF NOT EXISTS strategy_content (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+ALTER TABLE strategy_content ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public read strategy_content" ON strategy_content FOR SELECT USING (true);
+CREATE POLICY "Owner insert strategy_content" ON strategy_content FOR INSERT WITH CHECK (is_owner());
+CREATE POLICY "Owner update strategy_content" ON strategy_content FOR UPDATE USING (is_owner());
+CREATE POLICY "Owner delete strategy_content" ON strategy_content FOR DELETE USING (is_owner());
+
+CREATE OR REPLACE TRIGGER strategy_content_updated_at
+  BEFORE UPDATE ON strategy_content
+  FOR EACH ROW EXECUTE FUNCTION update_updated_at();

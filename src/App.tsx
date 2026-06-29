@@ -10,7 +10,6 @@ import { BackupExport } from './components/BackupExport';
 import { OwnerKeyPrompt } from './components/OwnerKeyPrompt';
 import { CategoryNav } from './components/CategoryNav';
 import { WarRoom } from './modules/WarRoom';
-import { useInterviewers } from './hooks/useInterviewers';
 import { BrandMark } from './components/BrandMark';
 import './index.css';
 
@@ -29,7 +28,6 @@ function AppContent() {
     renameModule, archiveModule, reorderModuleList, addNewModule,
     getModuleItemCount,
   } = ctx;
-  const { interviewers } = useInterviewers();
 
   const navigate = (page: string) => {
     setCurrentPage(page as Page);
@@ -318,7 +316,7 @@ function AppContent() {
       <main className="app-main">
         <div className="app-content">
           {currentPage === 'dashboard' && (
-            <Dashboard onNavigate={navigate} interviewers={interviewers} />
+            <Dashboard onNavigate={navigate} />
           )}
           {currentPage === 'warroom' && <WarRoom />}
           {currentPage === 'sources' && <SourceLibrary />}
